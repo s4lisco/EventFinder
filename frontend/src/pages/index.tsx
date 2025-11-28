@@ -18,7 +18,6 @@ type ViewMode = "map" | "list";
 export default function HomePage() {
   const [viewMode, setViewMode] = useState<ViewMode>("map");
   const [searchText, setSearchText] = useState("");
-  const [locationText, setLocationText] = useState("");
   const [category, setCategory] = useState<string | undefined>(undefined);
   const [distanceKm, setDistanceKm] = useState<number>(10);
 
@@ -105,8 +104,6 @@ export default function HomePage() {
                 <SearchBar
                   searchText={searchText}
                   onSearchTextChange={setSearchText}
-                  locationText={locationText}
-                  onLocationTextChange={setLocationText}
                   onSubmit={handleSearchSubmit}
                 />
                 <button
