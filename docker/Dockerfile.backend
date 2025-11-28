@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy only backend package files
+COPY package*.json ./
+
+# Install backend dependencies
+RUN npm install
+
+# Copy backend source code
+COPY . .
+
+# Build app
+RUN npm run build
+
+CMD ["sh", "-c", "npm run migration:run && npm run start:prod"]

@@ -1,32 +1,41 @@
+// backend/src/app.module.ts
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
-import { EventsModule } from './events/events.module';
-import { Event } from './events/entities/event.entity';
-import { Location } from './events/entities/location.entity';
-import { User } from './users/entities/user.entity';
-import { AppController } from './app.controller';
+import { OrganizerModule } from './organizer/organizer.module';
+import { EventModule } from './events/event.module';
+import { AdminModule } from './admin/admin.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from './auth/roles.guard';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      entities: [Event, Location, User], // ensure all entity classes are listed
+      host: process.env.DB_HOST || 'postgres',
+      port: Number(process.env.DB_PORT) || 5432,
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'events',
+      autoLoadEntities: true,
       synchronize: false,
-      migrationsRun: true,
-      migrations: ['dist/migrations/*.js'],
     }),
     AuthModule,
-    EventsModule,
+    OrganizerModule,
+    EventModule,
+    AdminModule,
   ],
-  controllers: [AppController],
-  providers: [],
+  providers: [
+    // Optional: make guards global, or apply per-controller
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
