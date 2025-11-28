@@ -27,7 +27,7 @@
     "typeorm": "^0.3.19"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.4.0",
+    "@nestjs/cli": "^10.4.9",
     "@nestjs/testing": "^10.4.20",
     "@types/bcrypt": "^6.0.0",
     "@types/geojson": "^7946.0.16",

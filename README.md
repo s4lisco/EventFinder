@@ -1,5 +1,14 @@
 # PRD — Regional Events Web & Mobile App
 
+## Install & Run project
+- Download the Git Repo
+- Run the following commands
+```
+docker-compose down --volumes --remove-orphans
+docker-compose build --no-cache
+docker-compose up
+```
+
 ## 1. Overview
 
 ### **Purpose**
