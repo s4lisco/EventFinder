@@ -1,25 +1,75 @@
-import { IsString, IsOptional, IsNumber, IsDateString } from 'class-validator';
+// backend/src/event/dto/create-event.dto.ts
+import {
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+} from 'class-validator';
+import { EventStatus } from '../event.entity';
 
 export class CreateEventDto {
   @IsString()
-  title: string;
+  @IsNotEmpty()
+  @MaxLength(255)
+  title!: string;
 
-  @IsOptional()
   @IsString()
-  description?: string;
+  @IsNotEmpty()
+  description!: string;
 
-  @IsOptional()
   @IsDateString()
-  date?: string;
+  startDate!: string;
+
+  @IsDateString()
+  endDate!: string;
 
   @IsString()
-  category: string;
+  @IsNotEmpty()
+  @MaxLength(100)
+  category!: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  priceInfo?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  locationName!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(500)
+  address!: string;
+
   @IsNumber()
-  lat?: number;
+  latitude!: number;
+
+  @IsNumber()
+  longitude!: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  organizerName!: string;
 
   @IsOptional()
-  @IsNumber()
-  lon?: number;
+  @IsUrl()
+  @MaxLength(500)
+  website?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
+
+  @IsOptional()
+  @IsEnum(EventStatus)
+  status?: EventStatus;
 }
