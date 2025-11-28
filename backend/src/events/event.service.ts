@@ -63,8 +63,6 @@ export class EventService {
     }
     qb.orderBy('events.startDate', 'ASC');
 
-console.log(qb.getSql());
-console.log(qb.getMany());
     return qb.getMany();
   }
 

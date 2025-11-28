@@ -30,7 +30,7 @@ export function useEvents(filters: UseEventsFilters): UseEventsResult {
       try {
         const params = new URLSearchParams();
         if (filters.category) params.set("category", filters.category);
-        if (filters.text) params.set("text", filters.text);
+        if (filters.text) params.set("search", filters.text);
         if (filters.distanceKm !== undefined)
           params.set("distanceKm", String(filters.distanceKm));
         if (filters.lat !== undefined) params.set("lat", String(filters.lat));

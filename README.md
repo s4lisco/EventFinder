@@ -6,7 +6,11 @@
 ```
 docker-compose down --volumes --remove-orphans
 docker-compose build --no-cache
-docker-compose up
+docker-compose up -d
+```
+- Insert test data by running the following command in a new terminal
+```
+docker exec -i postgres psql -U postgres -d eventfinder < temp/seed-test-data.sql
 ```
 
 ## 1. Overview
