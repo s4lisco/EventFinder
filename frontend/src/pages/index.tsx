@@ -16,23 +16,27 @@ const MapView = dynamic(() => import("../components/MapView"), {
 type ViewMode = "map" | "list";
 
 export default function HomePage() {
-  const [viewMode, setViewMode] = useState<ViewMode>("map");
-  const [searchText, setSearchText] = useState("");
-  const [category, setCategory] = useState<string | undefined>(undefined);
-  const [distanceKm, setDistanceKm] = useState<number>(10);
+    const [viewMode, setViewMode] = useState<ViewMode>("map");
+    const [searchText, setSearchText] = useState("");
+    const [category, setCategory] = useState<string | undefined>(undefined);
+    const [distanceKm, setDistanceKm] = useState<number>(10);
+    const [mapCenter, setMapCenter] = useState<{
+        lat: number;
+        lon: number;
+    } | null>(null);
 
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lon: number;
-  } | null>(null);
+    const [userLocation, setUserLocation] = useState<{
+        lat: number;
+        lon: number;
+    } | null>(null);
 
-  const { events, loading, error } = useEvents({
-    category,
-    text: searchText,
-    distanceKm: distanceKm,
-    lat: userLocation?.lat,
-    lon: userLocation?.lon,
-  });
+    const { events, loading, error } = useEvents({
+        category,
+        text: searchText,
+        distanceKm: distanceKm,
+        lat: mapCenter?.lat ?? userLocation?.lat,
+        lon: mapCenter?.lon ?? userLocation?.lon,
+    });
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -126,16 +130,16 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
             <div className="mt-24 h-[calc(100%-6rem)] lg:mt-0 lg:h-full">
               <MapView
-                events={eventsWithDistance}
-                userLocation={userLocation}
-                selectedEventId={selectedEvent?.id}
-                onSelectEvent={setSelectedEvent}
+                  events={eventsWithDistance}
+                  userLocation={userLocation}
+                  selectedEventId={selectedEvent?.id}
+                  distanceKm={distanceKm}
+                  onSelectEvent={setSelectedEvent}
+                  onMapCenterChange={setMapCenter}
               />
             </div>
-
             {/* Map/List toggle for mobile */}
             <div className="pointer-events-none fixed bottom-4 left-0 right-0 z-30 flex justify-center lg:hidden">
               <div className="pointer-events-auto inline-flex rounded-full bg-slate-900/90 p-1 text-xs text-white shadow-lg">

@@ -47,7 +47,7 @@ export default function FilterPanel({
         <input
           type="range"
           min={1}
-          max={100}
+          max={40}
           step={1}
           value={distanceKm}
           onChange={(e) => onDistanceKmChange(Number(e.target.value))}
