@@ -23,7 +23,6 @@ interface EventFormProps {
     submitting: boolean;
     error: string | null;
     onSubmit: (values: EventFormValues) => Promise<void> | void;
-    onValuesChange?: (values: EventFormValues) => void;
 }
 
 interface ValidationErrors {
@@ -45,7 +44,6 @@ export default function EventForm({
                                       submitting,
                                       error,
                                       onSubmit,
-                                      onValuesChange,
                                   }: EventFormProps) {
     const [values, setValues] = useState<EventFormValues>(initialValues);
     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
@@ -55,12 +53,6 @@ export default function EventForm({
     useEffect(() => {
         setValues(initialValues);
     }, [initialValues]);
-
-    useEffect(() => {
-        if (onValuesChange) {
-            onValuesChange(values);
-        }
-    }, [values, onValuesChange]);
 
     useEffect(() => {
         setSubmitError(error);

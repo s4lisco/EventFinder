@@ -103,7 +103,7 @@ export class FlyerService {
     if (!text || text.trim().length === 0) {
       return {
         needsManualReview: true,
-        extractedText: '',
+        extractedText: text || '',
         confidence: 0,
       };
     }
