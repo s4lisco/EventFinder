@@ -126,6 +126,38 @@ A single platform where:
 - GDPR compliance (export & delete organizer data)
 - Optional API rate limiting
 
+## 8.1 Environment Variables
+
+### Backend (`.env`)
+```bash
+# Database
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=events
+
+# JWT
+JWT_SECRET=your-jwt-secret
+
+# Event Flyer Upload Feature (Optional)
+# Google Cloud Vision API for OCR
+# Can be: JSON string, file path to credentials.json, or base64-encoded JSON
+GOOGLE_CLOUD_VISION_CREDENTIALS=path/to/credentials.json
+
+# Groq API for LLM extraction (Llama 3 70b)
+GROQ_API_KEY=your-groq-api-key
+```
+
+### Frontend (`.env.local`)
+```bash
+# API Base URL
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+
+# Mapbox
+NEXT_PUBLIC_MAPBOX_TOKEN=your-mapbox-token
+```
+
 ## 9. Operations & Scaling
 - Database migrations
 - Redis caching

@@ -1,14 +1,33 @@
 // frontend/src/pages/organizers/events/create.tsx
+import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import EventForm, { EventFormValues } from "@/components/EventForm";
+import FlyerUpload from "@/components/FlyerUpload";
 import { useEventMutation } from "@/hooks/useEventMutation";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
+
+const defaultFormValues: EventFormValues = {
+  title: "",
+  description: "",
+  startDate: "",
+  endDate: "",
+  category: "",
+  priceInfo: "",
+  locationName: "",
+  address: "",
+  latitude: "",
+  longitude: "",
+  website: "",
+  images: [""],
+  organizerName: "",
+};
 
 export default function OrganizerCreateEventPage() {
   const router = useRouter();
   const { token, checked } = useRequireAuth();
   const { createEvent, loading, error } = useEventMutation(token || undefined);
+  const [formValues, setFormValues] = useState<EventFormValues>(defaultFormValues);
 
   const handleSubmit = async (values: EventFormValues) => {
     const created = await createEvent(values);
@@ -17,6 +36,15 @@ export default function OrganizerCreateEventPage() {
       router.push("/organizers/dashboard");
     }
   };
+
+  const handleExtractedData = useCallback((data: Partial<EventFormValues>) => {
+    setFormValues((prev) => ({
+      ...prev,
+      ...data,
+      // Preserve images array if not provided in extracted data
+      images: data.images || prev.images,
+    }));
+  }, []);
 
   if (!checked) {
     return (
@@ -53,24 +81,13 @@ export default function OrganizerCreateEventPage() {
         </header>
 
         <main className="flex-1">
-          <div className="mx-auto max-w-2xl px-4 py-4">
+          <div className="mx-auto max-w-2xl px-4 py-4 space-y-4">
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <FlyerUpload onExtractedData={handleExtractedData} />
+            </div>
             <EventForm
               mode="create"
-              initialValues={{
-                title: "",
-                description: "",
-                startDate: "",
-                endDate: "",
-                category: "",
-                priceInfo: "",
-                locationName: "",
-                address: "",
-                latitude: "",
-                longitude: "",
-                website: "",
-                images: [""],
-                organizerName: "",
-              }}
+              initialValues={formValues}
               submitting={loading}
               error={error}
               onSubmit={handleSubmit}
