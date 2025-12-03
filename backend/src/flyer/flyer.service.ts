@@ -1,13 +1,11 @@
 // backend/src/flyer/flyer.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { ExtractedEventDto } from './dto/extract-event.dto';
-import { ImageAnnotatorClient } from '@google-cloud/vision';
 import OpenAI from 'openai';
 
 @Injectable()
 export class FlyerService {
   private readonly logger = new Logger(FlyerService.name);
-  private visionClient: ImageAnnotatorClient | null = null;
   private openaiClient: OpenAI | null = null;
 
   constructor() {
@@ -15,82 +13,75 @@ export class FlyerService {
   }
 
   private initializeClients(): void {
-    // Initialize Google Cloud Vision client
-    const googleCredentials = process.env.GOOGLE_CLOUD_VISION_CREDENTIALS;
-    if (googleCredentials) {
-      try {
-        // Handle both file path and base64-encoded JSON
-        if (googleCredentials.startsWith('{')) {
-          // Direct JSON string
-          const credentials = JSON.parse(googleCredentials);
-          this.visionClient = new ImageAnnotatorClient({ credentials });
-        } else if (googleCredentials.endsWith('.json')) {
-          // File path
-          this.visionClient = new ImageAnnotatorClient({
-            keyFilename: googleCredentials,
-          });
-        } else {
-          // Base64 encoded JSON
-          const decoded = Buffer.from(googleCredentials, 'base64').toString(
-            'utf-8',
-          );
-          const credentials = JSON.parse(decoded);
-          this.visionClient = new ImageAnnotatorClient({ credentials });
-        }
-        this.logger.log('Google Cloud Vision client initialized');
-      } catch (error) {
-        this.logger.warn(
-          'Failed to initialize Google Cloud Vision client:',
-          error,
-        );
-      }
-    } else {
-      this.logger.warn(
-        'GOOGLE_CLOUD_VISION_CREDENTIALS not set, OCR will not be available',
-      );
-    }
-
-    // Initialize Groq client (OpenAI compatible)
+    // Initialize Groq client (OpenAI compatible) for both OCR and LLM
     const groqApiKey = process.env.GROQ_API_KEY;
     if (groqApiKey) {
       this.openaiClient = new OpenAI({
         apiKey: groqApiKey,
         baseURL: 'https://api.groq.com/openai/v1',
       });
-      this.logger.log('Groq LLM client initialized');
+      this.logger.log('Groq client initialized (OCR + LLM)');
     } else {
-      this.logger.warn('GROQ_API_KEY not set, LLM extraction will not work');
+      this.logger.warn('GROQ_API_KEY not set, flyer processing will not work');
     }
   }
 
   async extractTextUsingOCR(buffer: Buffer): Promise<string> {
-    if (!this.visionClient) {
+    if (!this.openaiClient) {
       throw new Error(
-        'Google Cloud Vision client not initialized. Please configure GOOGLE_CLOUD_VISION_CREDENTIALS.',
+        'Groq client not initialized. Please configure GROQ_API_KEY.',
       );
     }
 
     try {
-      const [result] = await this.visionClient.textDetection({
-        image: { content: buffer },
+      // Convert buffer to base64 for vision API
+      const base64Image = buffer.toString('base64');
+      const mimeType = this.detectMimeType(buffer);
+
+      // Use Groq's vision capabilities via llama-2-90b-vision or similar
+      const response = await this.openaiClient.chat.completions.create({
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image_url',
+                image_url: {
+                  url: `data:${mimeType};base64,${base64Image}`,
+                },
+              },
+              {
+                type: 'text',
+                text: 'Extract ALL text from this image/flyer. Return only the extracted text, nothing else.',
+              },
+            ],
+          },
+        ],
+        max_tokens: 2000,
+        temperature: 0.1,
       });
 
-      const detections = result.textAnnotations;
-      if (!detections || detections.length === 0) {
-        this.logger.warn('No text detected in the image');
-        return '';
-      }
-
-      // The first annotation contains the full extracted text
-      const fullText = detections[0].description || '';
-      this.logger.log(`Extracted ${fullText.length} characters from image`);
-      return fullText;
+      const extractedText = response.choices[0]?.message?.content || '';
+      this.logger.log(
+        `Extracted ${extractedText.length} characters using Groq OCR`,
+      );
+      return extractedText;
     } catch (error) {
       this.logger.error('OCR extraction failed:', error);
       throw new Error(
         `OCR extraction failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
+  }
+
+  private detectMimeType(buffer: Buffer): string {
+    // Simple MIME type detection based on magic bytes
+    if (buffer[0] === 0xff && buffer[1] === 0xd8) return 'image/jpeg';
+    if (buffer[0] === 0x89 && buffer[1] === 0x50) return 'image/png';
+    if (buffer[0] === 0x47 && buffer[1] === 0x49) return 'image/gif';
+    if (buffer[0] === 0x25 && buffer[1] === 0x50) return 'application/pdf';
+    return 'application/octet-stream';
   }
 
   async extractEventDataUsingGroq(text: string): Promise<ExtractedEventDto> {
@@ -136,7 +127,7 @@ Important rules:
 
     try {
       const response = await this.openaiClient.chat.completions.create({
-        model: 'llama3-70b-8192',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
@@ -149,7 +140,7 @@ Important rules:
       this.logger.log('LLM response received');
 
       // Parse the JSON response
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      const jsonMatch = content.match(/{[\s\S]*}/);
       if (!jsonMatch) {
         this.logger.warn('No JSON found in LLM response');
         return {
@@ -197,8 +188,6 @@ Important rules:
     const extractedText = await this.extractTextUsingOCR(buffer);
 
     // Step 2: Extract structured event data using LLM
-    const eventData = await this.extractEventDataUsingGroq(extractedText);
-
-    return eventData;
+    return this.extractEventDataUsingGroq(extractedText);
   }
 }
