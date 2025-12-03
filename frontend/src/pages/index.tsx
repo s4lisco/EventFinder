@@ -8,6 +8,7 @@ import EventCard from "../components/EventCard";
 import { useEvents } from "../hooks/useEvents";
 import { Event } from "../types/event";
 import { haversineDistanceKm } from "../utils/distance";
+import { getCurrentPosition } from "../utils/location";
 
 const MapView = dynamic(() => import("../components/MapView"), {
   ssr: false,
@@ -39,18 +40,14 @@ export default function HomePage() {
     });
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserLocation({
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-        });
-      },
-      () => {
+    (async () => {
+      try {
+        const pos = await getCurrentPosition({ enableHighAccuracy: true });
+        setUserLocation({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+      } catch {
         // silently ignore errors, user can still search manually
-      },
-    );
+      }
+    })();
   }, []);
 
   const eventsWithDistance = useMemo(() => {

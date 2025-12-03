@@ -158,30 +158,99 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 NEXT_PUBLIC_MAPBOX_TOKEN=your-mapbox-token
 ```
 
-## 9. Operations & Scaling
-- Database migrations
-- Redis caching
-- Grafana monitoring
+# EventFinder – Web & Mobile (Capacitor)
 
-## 10. Roadmap
+Dieses Projekt ist nun als Webapp (Next.js) und als iOS/Android App via Capacitor lauffähig.
 
-### **Phase 1 (MVP)**
-- Mobile-first web app
-- Map/list views
-- Event details
-- Search & filters
-- Organizer onboarding & submission
-- Admin moderation
-- Database migrations & caching
+## Voraussetzungen
+- Node.js LTS (empfohlen: 20.x oder 18.x). Node 24 verursacht Build-Fehler mit Next 14.
+- npm
+- macOS für iOS-Builds: Xcode installiert, CocoaPods (`sudo gem install cocoapods`).
+- Android: Android Studio/SDK, Emulator eingerichtet.
 
-### **Phase 2**
-- Mobile app
-- Public event crawler
-- Social features (friends, private events, groups)
-- Notifications & advanced filters
+## Frontend-Setup
+```bash
+cd frontend
+npm install
+```
 
-### **Phase 3**
-- AI-based recommendations
-- Monetization (ads, ticketing)
-- Advanced analytics
-- Scaling improvements
+## Entwicklung (Web)
+```bash
+cd frontend
+npm run dev
+```
+App läuft unter http://localhost:3000.
+
+## Entwicklung (Mobile mit Live-Reload)
+Starte zuerst den Next.js Dev-Server:
+```bash
+cd frontend
+npm run dev
+```
+
+Dann in einem zweiten Terminal:
+```bash
+# iOS (öffnet Simulator/Xcode)
+npm run run:ios
+
+# Android (öffnet Emulator/Android Studio)
+npm run run:android
+```
+Hinweis: Für iOS müssen Xcode und CocoaPods installiert sein. Für Android ein laufender Emulator.
+
+## Build & Sync der nativen Projekte
+```bash
+cd frontend
+npm run build:web
+npm run sync
+```
+Danach kannst du die Projekte öffnen:
+```bash
+npm run ios      # Öffnet iOS-Projekt in Xcode
+npm run android  # Öffnet Android-Projekt in Android Studio
+```
+
+## Geolocation
+- Nativ (Capacitor): nutzt `@capacitor/geolocation` und fragt Berechtigungen an.
+- Web: fällt auf `navigator.geolocation` zurück.
+- Der Code prüft SSR (kein Zugriff auf `window`/`navigator` während Server-Rendern).
+
+## Wichtige Umgebungsvariablen
+- `NEXT_PUBLIC_API_URL`: Basis-URL des Backends für das Frontend. Stelle sicher, dass diese für Web und Mobile erreichbar ist.
+- Capacitor Dev-Server-URL: `frontend/capacitor.config.ts` nutzt standardmäßig `http://localhost:3000` für Livereload.
+
+## CORS
+Wenn du den NestJS-Backend-Server mit der App nutzt, stelle sicher, dass CORS Ursprünge wie `http://localhost:3000`, `capacitor://localhost` und ggf. `ionic://localhost` erlaubt sind.
+
+## Häufige Fehler
+- `Cannot find module '../server/require-hook'` oder fehlende `next`/`tsc`-Bins: Nutze Node LTS (18/20) und führe Befehle im Ordner `frontend/` aus. Danach `npm install` und erneut bauen.
+- iOS `pod install` Fehlermeldungen: Installiere CocoaPods (`sudo gem install cocoapods`) und führe `pod install` in `frontend/ios/App` aus.
+- Android HTTP in Dev: Für Livereload ist `android:usesCleartextTraffic="true"` gesetzt; für Produktion auf HTTPS umstellen.
+
+## Docker
+Docker-Setup für das Backend bleibt unverändert. Mobile Apps laufen außerhalb von Docker, greifen aber auf die im Container bereitgestellten Backend-Ports zu (achte auf korrekte `NEXT_PUBLIC_API_URL`).
+
+# EventFinder — Capacitor Dev Hinweise
+
+Wenn du die App im iOS/Android Simulator mit Live-Reload startest, muss die native WebView auf deinen Next.js Dev-Server zugreifen können.
+
+Wichtig:
+- Setze in `frontend/capacitor.config.ts` die `server.url` NICHT auf `localhost`, sondern auf deine LAN-IP.
+  - Beispiel: `http://192.168.1.50:3000` (dein Rechner im gleichen Netzwerk)
+  - Android Emulator: `http://10.0.2.2:3000`
+- `cleartext: true` erlaubt HTTP im Dev. Für Produktion entferne `server.url` und baue statische Assets (`npm run build && npx cap sync`).
+- iOS: Falls ATS (App Transport Security) blockiert, setze temporär Ausnahmen in `Info.plist` (nur Dev).
+
+Ablauf Dev (Beispiel):
+1. Frontend Dev starten:
+   - `cd frontend`
+   - `npm run dev`
+2. In `frontend/capacitor.config.ts` die `server.url` korrekt setzen (LAN-IP oder Emulator-Spezialadresse).
+3. Synchronisieren:
+   - `npx cap sync`
+4. Öffnen:
+   - `npx cap open ios` oder `npx cap open android`
+
+Fehler "Verbindung zum Server konnte nicht hergestellt werden":
+- Ursache: iOS WebView versucht `localhost:3000`, das ist in der WebView nicht dein Rechner.
+- Lösung: LAN-IP nutzen oder Emulator-Adresse (siehe oben).
