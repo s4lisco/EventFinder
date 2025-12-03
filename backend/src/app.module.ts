@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { OrganizerModule } from './organizer/organizer.module';
 import { EventModule } from './events/event.module';
 import { AdminModule } from './admin/admin.module';
+import { FlyerModule } from './flyer/flyer.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -25,6 +26,7 @@ import { RolesGuard } from './auth/roles.guard';
     OrganizerModule,
     EventModule,
     AdminModule,
+    FlyerModule,
   ],
   providers: [
     // Optional: make guards global, or apply per-controller
