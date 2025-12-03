@@ -64,3 +64,28 @@ docker-compose.override.yml
 .idea/
 *.swp
 *.swo
+
+# ─────────────────────────────────────────────
+#  Capacitor (native Projekte)
+# ─────────────────────────────────────────────
+frontend/android/
+frontend/ios/
+
+# ─────────────────────────────────────────────
+#  Coverage & Test Artefakte
+# ─────────────────────────────────────────────
+coverage/
+frontend/coverage/
+backend/coverage/
+
+# ─────────────────────────────────────────────
+#  Linter/Build Caches
+# ─────────────────────────────────────────────
+.eslintcache
+.cache/
+
+# ─────────────────────────────────────────────
+#  Temporäre Dateien
+# ─────────────────────────────────────────────
+temp/*
+!temp/seed-test-data.sql

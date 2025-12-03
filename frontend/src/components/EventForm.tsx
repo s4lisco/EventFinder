@@ -1,5 +1,6 @@
 // frontend/src/components/EventForm.tsx
 import {FormEvent, useEffect, useState} from "react";
+import { getCurrentPosition } from "../utils/location";
 
 export interface EventFormValues {
     title: string;
@@ -136,20 +137,14 @@ export default function EventForm({
         return Object.keys(errors).length === 0;
     };
 
-    const handleUseMyLocation = () => {
-        if (!navigator.geolocation) {
-            alert("Geolocation is not supported by this browser.");
-            return;
+    const handleUseMyLocation = async () => {
+        try {
+            const pos = await getCurrentPosition({ enableHighAccuracy: true });
+            handleChange("latitude", String(pos.coords.latitude));
+            handleChange("longitude", String(pos.coords.longitude));
+        } catch {
+            alert("Unable to detect your location.");
         }
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                handleChange("latitude", String(pos.coords.latitude));
-                handleChange("longitude", String(pos.coords.longitude));
-            },
-            () => {
-                alert("Unable to detect your location.");
-            },
-        );
     };
 
     const handleSubmit = async (e: FormEvent) => {
