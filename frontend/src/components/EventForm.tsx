@@ -1,5 +1,7 @@
 // frontend/src/components/EventForm.tsx
 import {FormEvent, useEffect, useState} from "react";
+import { EventImage } from "@/types/event";
+import ImageUploadField from "./ImageUploadField";
 
 export interface EventFormValues {
     title: string;
@@ -23,6 +25,13 @@ interface EventFormProps {
     submitting: boolean;
     error: string | null;
     onSubmit: (values: EventFormValues) => Promise<void> | void;
+    // New props for image upload
+    eventId?: string;
+    existingImages?: EventImage[];
+    selectedFiles?: File[];
+    onFilesChange?: (files: File[]) => void;
+    onDeleteImage?: (imageId: string) => Promise<void>;
+    showImageUpload?: boolean;
 }
 
 interface ValidationErrors {
@@ -44,6 +53,12 @@ export default function EventForm({
                                       submitting,
                                       error,
                                       onSubmit,
+                                      eventId,
+                                      existingImages = [],
+                                      selectedFiles = [],
+                                      onFilesChange = () => {},
+                                      onDeleteImage = async () => {},
+                                      showImageUpload = false,
                                   }: EventFormProps) {
     const [values, setValues] = useState<EventFormValues>(initialValues);
     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
@@ -414,44 +429,54 @@ export default function EventForm({
                 />
             </div>
 
-            {/* Images */}
-            <div className="space-y-1">
-                <label className="text-xs font-medium text-text">
-                    Bild-URLs (optional)
-                </label>
-                <p className="text-[11px] text-text-muted">
-                    Fügen Sie Links zu Bildern ein. Das erste Bild wird als Hauptbild verwendet.
-                </p>
-                <div className="space-y-2">
-                    {values.images.map((img, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                            <input
-                                type="url"
-                                value={img}
-                                onChange={(e) => handleImageChange(index, e.target.value)}
-                                className="input flex-1"
-                                placeholder="https://…"
-                            />
-                            {values.images.length > 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => handleRemoveImageField(index)}
-                                    className="rounded-full border-2 border-border bg-white px-2 py-1 text-xs text-text-muted hover:bg-surface"
-                                >
-                                    ✕
-                                </button>
-                            )}
-                        </div>
-                    ))}
+            {/* Images - Use new upload component if enabled, otherwise fallback to URL inputs */}
+            {showImageUpload && eventId ? (
+                <ImageUploadField
+                    existingImages={existingImages}
+                    onDelete={onDeleteImage}
+                    selectedFiles={selectedFiles}
+                    onFilesChange={onFilesChange}
+                    disabled={submitting}
+                />
+            ) : (
+                <div className="space-y-1">
+                    <label className="text-xs font-medium text-text">
+                        Bild-URLs (optional)
+                    </label>
+                    <p className="text-[11px] text-text-muted">
+                        Fügen Sie Links zu Bildern ein. Das erste Bild wird als Hauptbild verwendet.
+                    </p>
+                    <div className="space-y-2">
+                        {values.images.map((img, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <input
+                                    type="url"
+                                    value={img}
+                                    onChange={(e) => handleImageChange(index, e.target.value)}
+                                    className="input flex-1"
+                                    placeholder="https://…"
+                                />
+                                {values.images.length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveImageField(index)}
+                                        className="rounded-full border-2 border-border bg-white px-2 py-1 text-xs text-text-muted hover:bg-surface"
+                                    >
+                                        ✕
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleAddImageField}
+                        className="mt-1 text-[11px] font-medium text-primary hover:opacity-80"
+                    >
+                        + Weiteres Bild hinzufügen
+                    </button>
                 </div>
-                <button
-                    type="button"
-                    onClick={handleAddImageField}
-                    className="mt-1 text-[11px] font-medium text-primary hover:opacity-80"
-                >
-                    + Weiteres Bild hinzufügen
-                </button>
-            </div>
+            )}
 
             {/* Submit */}
             <div className="pt-2">

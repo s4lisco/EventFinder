@@ -5,6 +5,7 @@ import Head from "next/head";
 import EventForm, { EventFormValues } from "@/components/EventForm";
 import FlyerUpload from "@/components/FlyerUpload";
 import { useEventMutation } from "@/hooks/useEventMutation";
+import { useEventImages } from "@/hooks/useEventImages";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 
 const defaultFormValues: EventFormValues = {
@@ -27,13 +28,26 @@ export default function OrganizerCreateEventPage() {
   const router = useRouter();
   const { token, checked } = useRequireAuth();
   const { createEvent, loading, error } = useEventMutation(token || undefined);
+  const { uploadImages, uploading } = useEventImages(token || undefined);
   const [formValues, setFormValues] = useState<EventFormValues>(defaultFormValues);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [createdEventId, setCreatedEventId] = useState<string | null>(null);
 
   const handleSubmit = async (values: EventFormValues) => {
     const created = await createEvent(values);
     if (created) {
-      // Redirect to organizer dashboard or event detail
-      router.push("/organizers/dashboard");
+      // If there are files to upload, upload them first
+      if (selectedFiles.length > 0) {
+        setCreatedEventId(created.id);
+        const uploaded = await uploadImages(created.id, selectedFiles);
+        if (uploaded) {
+          // Success - redirect after upload
+          router.push("/organizers/dashboard");
+        }
+      } else {
+        // No files to upload, redirect immediately
+        router.push("/organizers/dashboard");
+      }
     }
   };
 
@@ -58,6 +72,8 @@ export default function OrganizerCreateEventPage() {
     // useRequireAuth already triggered redirect
     return null;
   }
+
+  const isSubmitting = loading || uploading;
 
   return (
     <>
@@ -88,9 +104,12 @@ export default function OrganizerCreateEventPage() {
             <EventForm
               mode="create"
               initialValues={formValues}
-              submitting={loading}
+              submitting={isSubmitting}
               error={error}
               onSubmit={handleSubmit}
+              selectedFiles={selectedFiles}
+              onFilesChange={setSelectedFiles}
+              showImageUpload={false}
             />
           </div>
         </main>
