@@ -2,10 +2,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "./AuthProvider";
+import { useTranslations } from "@/utils/i18n";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const router = useRouter();
   const { isAuthenticated, role, user, logout } = useAuth();
+  const t = useTranslations();
 
   const handleLogout = () => {
     logout();
@@ -26,12 +29,13 @@ export default function Navbar() {
       </Link>
 
       <div className="flex items-center gap-2 text-sm">
+        <LanguageSwitcher />
         {isAuthenticated && role === "organizer" && (
           <Link
             href="/organizers/dashboard"
             className="hidden rounded-button px-4 py-2 font-medium text-text transition-all duration-150 hover:bg-surface md:inline-flex"
           >
-            Übersicht
+            {t('nav.overview')}
           </Link>
         )}
         {isAuthenticated && role === "admin" && (
@@ -39,7 +43,7 @@ export default function Navbar() {
             href="/admin/dashboard"
             className="hidden rounded-button px-4 py-2 font-medium text-text transition-all duration-150 hover:bg-surface md:inline-flex"
           >
-            Verwaltung
+            {t('nav.management')}
           </Link>
         )}
 
@@ -49,13 +53,13 @@ export default function Navbar() {
               href="/organizers/login"
               className="rounded-button border-2 border-border px-4 py-2 text-xs font-semibold text-text transition-all duration-150 hover:bg-surface sm:text-sm"
             >
-              Veranstalter
+              {t('nav.organizer')}
             </Link>
             <Link
               href="/admin/login"
               className="rounded-button bg-gradient-primary px-4 py-2 text-xs font-semibold text-white shadow-soft transition-all duration-150 hover:opacity-90 sm:text-sm"
             >
-              Verwaltung
+              {t('nav.management')}
             </Link>
           </>
         )}
@@ -65,7 +69,7 @@ export default function Navbar() {
             onClick={handleLogout}
             className="rounded-button border-2 border-border px-4 py-2 text-xs font-semibold text-text transition-all duration-150 hover:border-red-500/30 hover:bg-red-50 hover:text-red-700 sm:text-sm"
           >
-            Abmelden
+            {t('nav.logout')}
           </button>
         )}
       </div>
