@@ -90,10 +90,10 @@ export default function HomePage() {
       <Head>
         <title>Discover Events Near You | EventFinder</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-gradient-subtle">
-        <header className="border-b border-slate-200/50 bg-white/80 px-4 py-4 shadow-soft backdrop-blur-xl lg:px-6">
+      <div className="flex min-h-screen flex-col bg-white">
+        <header className="border-b border-border bg-white px-4 py-4 shadow-soft lg:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-soft">
+            <div className="flex h-10 w-10 items-center justify-center rounded-button bg-gradient-primary shadow-soft">
               <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -103,7 +103,7 @@ export default function HomePage() {
               <h1 className="text-xl font-bold text-gradient">
                 Events Near You
               </h1>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-text-muted">
                 Discover amazing local events on the map
               </p>
             </div>
@@ -114,7 +114,7 @@ export default function HomePage() {
           {/* Left column (map on desktop) */}
           <div className="relative h-[55vh] w-full lg:h-auto lg:flex-1">
             <div className="pointer-events-none absolute inset-x-0 top-3 z-20 flex justify-center px-3 lg:justify-start lg:px-4">
-              <div className="pointer-events-auto w-full max-w-xl animate-slide-up rounded-2xl bg-white/95 p-3 shadow-soft-xl backdrop-blur-xl">
+              <div className="pointer-events-auto w-full max-w-xl animate-slide-up rounded-card bg-white/95 p-3 shadow-soft-xl backdrop-blur-xl">
                 <SearchBar
                   searchText={searchText}
                   onSearchTextChange={setSearchText}
@@ -122,7 +122,7 @@ export default function HomePage() {
                 />
                 <button
                   type="button"
-                  className="mt-3 inline-flex w-full items-center justify-between rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-soft transition-all duration-200 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 lg:hidden"
+                  className="mt-3 btn-secondary w-full justify-between"
                   onClick={() => setIsFilterOpen((v) => !v)}
                 >
                   <span className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export default function HomePage() {
                     </svg>
                     Filters
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-primary-600">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary">
                     {isFilterOpen ? "Hide" : "Show"}
                   </span>
                 </button>
@@ -157,11 +157,11 @@ export default function HomePage() {
             </div>
             {/* Map/List toggle for mobile */}
             <div className="pointer-events-none fixed bottom-6 left-0 right-0 z-30 flex justify-center lg:hidden">
-              <div className="pointer-events-auto inline-flex gap-1 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 p-1.5 shadow-soft-xl backdrop-blur-xl">
+              <div className="pointer-events-auto inline-flex gap-1 rounded-full bg-text p-1.5 shadow-soft-xl backdrop-blur-xl">
                 <button
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-150 ${
                     viewMode === "map" 
-                      ? "bg-white text-slate-900 shadow-soft" 
+                      ? "bg-white text-text shadow-soft" 
                       : "text-white hover:bg-white/10"
                   }`}
                   onClick={() => setViewMode("map")}
@@ -172,9 +172,9 @@ export default function HomePage() {
                   Map
                 </button>
                 <button
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-150 ${
                     viewMode === "list" 
-                      ? "bg-white text-slate-900 shadow-soft" 
+                      ? "bg-white text-text shadow-soft" 
                       : "text-white hover:bg-white/10"
                   }`}
                   onClick={() => setViewMode("list")}
@@ -191,7 +191,7 @@ export default function HomePage() {
           {/* Right column (list on desktop) / collapsible on mobile */}
           <aside
             className={`
-              w-full border-t border-slate-200/50 bg-white/80 backdrop-blur-xl lg:h-auto lg:w-[400px] lg:border-l lg:border-t-0
+              w-full border-t border-border bg-white/80 backdrop-blur-xl lg:h-auto lg:w-[400px] lg:border-l lg:border-t-0
               ${viewMode === "list" ? "block" : "hidden lg:block"}
             `}
           >
@@ -210,13 +210,13 @@ export default function HomePage() {
               </div>
 
               {loading && (
-                <div className="flex items-center gap-2 py-4 text-sm text-slate-500">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"></div>
+                <div className="flex items-center gap-2 py-4 text-sm text-text-muted">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
                   Loading events…
                 </div>
               )}
               {error && (
-                <div className="animate-slide-up rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-soft">
+                <div className="animate-slide-up rounded-card border-2 border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-700 shadow-soft">
                   <div className="flex items-center gap-2 font-semibold">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -227,14 +227,14 @@ export default function HomePage() {
                 </div>
               )}
               {!loading && !error && sortedForList.length === 0 && (
-                <div className="animate-slide-up rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center shadow-soft">
-                  <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200">
-                    <svg className="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="animate-slide-up rounded-card border-2 border-dashed border-border bg-surface px-4 py-8 text-center shadow-soft">
+                  <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-border">
+                    <svg className="h-6 w-6 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <p className="text-sm font-semibold text-slate-700">No events found</p>
-                  <p className="mt-1 text-xs text-slate-500">Try adjusting your filters or search</p>
+                  <p className="text-sm font-semibold text-text">No events found</p>
+                  <p className="mt-1 text-xs text-text-muted">Try adjusting your filters or search</p>
                 </div>
               )}
 
