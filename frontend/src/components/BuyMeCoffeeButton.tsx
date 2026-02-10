@@ -45,18 +45,9 @@ export default function BuyMeCoffeeButton() {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 8.5l.01-.01M12.5 6l.01-.01M15 8.5l.01-.01"
+            d="M3 3h12v13a4 4 0 01-4 4H7a4 4 0 01-4-4V3zM15 8h2a3 3 0 010 6h-2"
           />
         </svg>
-
-        {/* Pulse animation ring */}
-        <div className="absolute inset-0 -z-10 animate-ping rounded-full bg-amber-400 opacity-20"></div>
       </a>
     </div>
   );
