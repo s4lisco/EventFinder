@@ -1,10 +1,10 @@
 // frontend/src/components/LanguageSwitcher.tsx
 import { useLocale, locales, Locale } from '@/utils/i18n';
 
-// Map locale codes to flag emojis
-const localeEmojis: Record<Locale, string> = {
-  'de': '🇩🇪',
-  'gsw-CH': '🇨🇭',
+// Map locale codes to flag emojis and accessible labels
+const localeEmojis: Record<Locale, { emoji: string; label: string }> = {
+  'de': { emoji: '🇩🇪', label: 'Deutsch' },
+  'gsw-CH': { emoji: '🇨🇭', label: 'Schwizerdütsch' },
 };
 
 export default function LanguageSwitcher() {
@@ -15,11 +15,12 @@ export default function LanguageSwitcher() {
       <select
         value={locale}
         onChange={(e) => setLocale(e.target.value as Locale)}
+        aria-label="Select language"
         className="appearance-none rounded-button border-2 border-border bg-white px-3 py-2 pr-8 text-xs font-semibold text-text transition-all duration-150 hover:bg-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-sm"
       >
         {locales.map((loc) => (
           <option key={loc} value={loc}>
-            {localeEmojis[loc]}
+            {localeEmojis[loc].emoji}
           </option>
         ))}
       </select>
