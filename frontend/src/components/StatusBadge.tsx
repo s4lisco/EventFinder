@@ -14,10 +14,10 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
 
   const colorClasses =
     normalized === "approved"
-      ? "bg-gradient-to-r from-success-100 to-success-50 text-success-700 ring-1 ring-success-200"
+      ? "badge-success"
       : normalized === "rejected"
-      ? "bg-gradient-to-r from-red-100 to-red-50 text-red-700 ring-1 ring-red-200"
-      : "bg-gradient-to-r from-amber-100 to-amber-50 text-amber-700 ring-1 ring-amber-200";
+      ? "badge-danger"
+      : "badge-warning";
 
   const icon =
     normalized === "approved" ? (
