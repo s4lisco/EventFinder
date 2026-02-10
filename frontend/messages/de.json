@@ -13,7 +13,7 @@
     "placeholder": "Suche nach Veranstaltungen..."
   },
   "filter": {
-    "category": "Category",
+    "category": "Kategorie",
     "radius": "Umkreis",
     "filter": "Filter",
     "show": "Anzeigen",
