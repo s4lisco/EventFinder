@@ -77,12 +77,4 @@
   .bg-gradient-subtle {
     @apply bg-gradient-to-br from-primary-50 via-white to-accent-50;
   }
-  
-  .animate-in {
-    @apply animate-fade-in;
-  }
-  
-  .animate-slide-up {
-    @apply animate-slide-up;
-  }
 }
