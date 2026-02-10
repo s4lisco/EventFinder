@@ -5,6 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import Navbar from "@/components/Navbar";
 import CookieBanner from "@/components/CookieBanner";
+import BuyMeCoffeeButton from "@/components/BuyMeCoffeeButton";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Navbar />
         <Component {...pageProps} />
         <CookieBanner />
+        <BuyMeCoffeeButton />
       </div>
     </AuthProvider>
   );
