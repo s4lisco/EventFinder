@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import Navbar from "@/components/Navbar";
+import CookieBanner from "@/components/CookieBanner";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -11,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div className="flex min-h-screen flex-col bg-slate-50">
         <Navbar />
         <Component {...pageProps} />
+        <CookieBanner />
       </div>
     </AuthProvider>
   );
