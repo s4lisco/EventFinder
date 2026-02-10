@@ -30,12 +30,12 @@ interface ValidationErrors {
 }
 
 const CATEGORY_OPTIONS = [
-    {value: "", label: "Select category"},
-    {value: "music", label: "Music"},
-    {value: "sports", label: "Sports"},
-    {value: "family", label: "Family"},
-    {value: "arts", label: "Arts & Culture"},
-    {value: "food", label: "Food & Drinks"},
+    {value: "", label: "Kategorie wählen"},
+    {value: "music", label: "Musik"},
+    {value: "sports", label: "Sport"},
+    {value: "family", label: "Familie"},
+    {value: "arts", label: "Kunst & Kultur"},
+    {value: "food", label: "Essen & Trinken"},
 ];
 
 export default function EventForm({
@@ -121,16 +121,16 @@ export default function EventForm({
     const validate = (): boolean => {
         const errors: ValidationErrors = {};
 
-        if (!values.title.trim()) errors.title = "Title is required";
+        if (!values.title.trim()) errors.title = "Titel ist erforderlich";
         if (!values.description.trim())
-            errors.description = "Description is required";
-        if (!values.startDate) errors.startDate = "Start date & time is required";
-        if (!values.category) errors.category = "Category is required";
+            errors.description = "Beschreibung ist erforderlich";
+        if (!values.startDate) errors.startDate = "Startdatum und -uhrzeit sind erforderlich";
+        if (!values.category) errors.category = "Kategorie ist erforderlich";
         if (!values.locationName.trim())
-            errors.locationName = "Location name is required";
-        if (!values.address.trim()) errors.address = "Address is required";
-        if (!values.latitude) errors.latitude = "Latitude is required";
-        if (!values.longitude) errors.longitude = "Longitude is required";
+            errors.locationName = "Ortsname ist erforderlich";
+        if (!values.address.trim()) errors.address = "Adresse ist erforderlich";
+        if (!values.latitude) errors.latitude = "Breitengrad ist erforderlich";
+        if (!values.longitude) errors.longitude = "Längengrad ist erforderlich";
 
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
@@ -138,7 +138,7 @@ export default function EventForm({
 
     const handleUseMyLocation = () => {
         if (!navigator.geolocation) {
-            alert("Geolocation is not supported by this browser.");
+            alert("Geolokalisierung wird von diesem Browser nicht unterstützt.");
             return;
         }
         navigator.geolocation.getCurrentPosition(
@@ -147,7 +147,7 @@ export default function EventForm({
                 handleChange("longitude", String(pos.coords.longitude));
             },
             () => {
-                alert("Unable to detect your location.");
+                alert("Ihr Standort konnte nicht ermittelt werden.");
             },
         );
     };
@@ -160,36 +160,36 @@ export default function EventForm({
         try {
             await onSubmit(values);
         } catch (err: any) {
-            setSubmitError(err.message || "Failed to save event");
+            setSubmitError(err.message || "Fehler beim Speichern der Veranstaltung");
         }
     };
 
-    const titleLabel = mode === "create" ? "Create event" : "Update event";
+    const titleLabel = mode === "create" ? "Veranstaltung erstellen" : "Veranstaltung aktualisieren";
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-4 rounded-2xl bg-white p-4 shadow-sm"
+            className="space-y-4 rounded-card bg-white p-4 shadow-soft"
         >
-            <h2 className="text-base font-semibold text-slate-900">{titleLabel}</h2>
+            <h2 className="text-base font-semibold text-text">{titleLabel}</h2>
 
             {submitError && (
-                <div className="rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-xs text-red-700">
+                <div className="rounded-card border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-700">
                     {submitError}
                 </div>
             )}
 
             {/* Title */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Title <span className="text-red-500">*</span>
+                <label className="text-xs font-medium text-text">
+                    Titel <span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
                     value={values.title}
                     onChange={(e) => handleChange("title", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="Event title"
+                    className="input"
+                    placeholder="Veranstaltungstitel"
                 />
                 {validationErrors.title && (
                     <p className="text-[11px] text-red-500">
@@ -200,14 +200,14 @@ export default function EventForm({
 
             {/* Description */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Description <span className="text-red-500">*</span>
+                <label className="text-xs font-medium text-text">
+                    Beschreibung <span className="text-red-500">*</span>
                 </label>
                 <textarea
                     value={values.description}
                     onChange={(e) => handleChange("description", e.target.value)}
-                    className="min-h-[96px] w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="Describe your event, schedule, etc."
+                    className="min-h-[96px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    placeholder="Beschreiben Sie Ihre Veranstaltung, den Ablauf usw."
                 />
                 {validationErrors.description && (
                     <p className="text-[11px] text-red-500">
@@ -219,14 +219,14 @@ export default function EventForm({
             {/* Dates */}
             <div className="grid gap-3 md:grid-cols-2">
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-700">
-                        Start date &amp; time <span className="text-red-500">*</span>
+                    <label className="text-xs font-medium text-text">
+                        Startdatum &amp; -uhrzeit <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="datetime-local"
                         value={values.startDate}
                         onChange={(e) => handleChange("startDate", e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="input"
                     />
                     {validationErrors.startDate && (
                         <p className="text-[11px] text-red-500">
@@ -235,14 +235,14 @@ export default function EventForm({
                     )}
                 </div>
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-700">
-                        End date &amp; time
+                    <label className="text-xs font-medium text-text">
+                        Enddatum &amp; -uhrzeit
                     </label>
                     <input
                         type="datetime-local"
                         value={values.endDate}
                         onChange={(e) => handleChange("endDate", e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="input"
                     />
                 </div>
             </div>
@@ -250,13 +250,13 @@ export default function EventForm({
             {/* Category + price */}
             <div className="grid gap-3 md:grid-cols-2">
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-700">
-                        Category <span className="text-red-500">*</span>
+                    <label className="text-xs font-medium text-text">
+                        Kategorie <span className="text-red-500">*</span>
                     </label>
                     <select
                         value={values.category}
                         onChange={(e) => handleChange("category", e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="input"
                     >
                         {CATEGORY_OPTIONS.map((opt) => (
                             <option key={opt.value || "all"} value={opt.value}>
@@ -271,30 +271,30 @@ export default function EventForm({
                     )}
                 </div>
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-700">
-                        Price info
+                    <label className="text-xs font-medium text-text">
+                        Preisinformation
                     </label>
                     <input
                         type="text"
                         value={values.priceInfo}
                         onChange={(e) => handleChange("priceInfo", e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                        placeholder="e.g. Free, €15 entry, etc."
+                        className="input"
+                        placeholder="z.B. Kostenlos, 15€ Eintritt, etc."
                     />
                 </div>
             </div>
 
             {/* Location */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Location name <span className="text-red-500">*</span>
+                <label className="text-xs font-medium text-text">
+                    Ortsname <span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
                     value={values.locationName}
                     onChange={(e) => handleChange("locationName", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="Venue name, park, etc."
+                    className="input"
+                    placeholder="Veranstaltungsort, Park, etc."
                 />
                 {validationErrors.locationName && (
                     <p className="text-[11px] text-red-500">
@@ -304,24 +304,24 @@ export default function EventForm({
             </div>
 
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Address <span className="text-red-500">*</span>
+                <label className="text-xs font-medium text-text">
+                    Adresse <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
                     <input
                         type="text"
                         value={values.address}
                         onChange={(e) => handleChange("address", e.target.value)}
-                        className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                        placeholder="Street, number, city"
+                        className="input flex-1"
+                        placeholder="Straße, Hausnummer, Stadt"
                     />
                     <button
                         type="button"
                         onClick={geocodeAddress}
                         disabled={geocodingLoading}
-                        className="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-400"
+                        className="btn-primary px-4 py-2"
                     >
-                        {geocodingLoading ? "…" : "Find"}
+                        {geocodingLoading ? "…" : "Suchen"}
                     </button>
                 </div>
                 {validationErrors.address && (
@@ -332,30 +332,30 @@ export default function EventForm({
             </div>
 
             {/* Coordinates */}
-            <div className="space-y-1 rounded-2xl bg-slate-50 p-3">
+            <div className="space-y-1 rounded-card bg-surface p-3">
                 <div className="flex items-center justify-between">
-                    <p className="text-xs font-medium text-slate-700">
-                        Coordinates (auto-filled)
+                    <p className="text-xs font-medium text-text">
+                        Koordinaten (automatisch ausgefüllt)
                     </p>
                     <button
                         type="button"
                         onClick={handleUseMyLocation}
-                        className="text-[11px] font-medium text-emerald-600 hover:text-emerald-700"
+                        className="text-[11px] font-medium text-primary hover:opacity-80"
                     >
-                        Use my location
+                        Meinen Standort verwenden
                     </button>
                 </div>
                 <div className="mt-2 grid gap-3 md:grid-cols-2">
                     <div className="space-y-1">
-                        <label className="text-[11px] text-slate-600">
-                            Latitude <span className="text-red-500">*</span>
+                        <label className="text-[11px] text-text-muted">
+                            Breitengrad <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
                             step="0.000001"
                             value={values.latitude}
                             onChange={(e) => handleChange("latitude", e.target.value)}
-                            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                            className="input"
                         />
                         {validationErrors.latitude && (
                             <p className="text-[11px] text-red-500">
@@ -364,15 +364,15 @@ export default function EventForm({
                         )}
                     </div>
                     <div className="space-y-1">
-                        <label className="text-[11px] text-slate-600">
-                            Longitude <span className="text-red-500">*</span>
+                        <label className="text-[11px] text-text-muted">
+                            Längengrad <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
                             step="0.000001"
                             value={values.longitude}
                             onChange={(e) => handleChange("longitude", e.target.value)}
-                            className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                            className="input"
                         />
                         {validationErrors.longitude && (
                             <p className="text-[11px] text-red-500">
@@ -381,46 +381,46 @@ export default function EventForm({
                         )}
                     </div>
                 </div>
-                <p className="mt-1 text-[11px] text-slate-500">
-                    Coordinates werden automatisch aus der Adresse gefüllt oder können manuell angepasst werden.
+                <p className="mt-1 text-[11px] text-text-muted">
+                    Koordinaten werden automatisch aus der Adresse gefüllt oder können manuell angepasst werden.
                 </p>
             </div>
 
             {/* Organizer name */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Organizer name
+                <label className="text-xs font-medium text-text">
+                    Veranstaltername
                 </label>
                 <input
                     type="text"
                     value={values.organizerName}
                     onChange={(e) => handleChange("organizerName", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="Your name or organization"
+                    className="input"
+                    placeholder="Ihr Name oder Organisation"
                 />
             </div>
 
             {/* Website */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Website (optional)
+                <label className="text-xs font-medium text-text">
+                    Webseite (optional)
                 </label>
                 <input
                     type="url"
                     value={values.website}
                     onChange={(e) => handleChange("website", e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                    placeholder="https://example.com"
+                    className="input"
+                    placeholder="https://beispiel.de"
                 />
             </div>
 
             {/* Images */}
             <div className="space-y-1">
-                <label className="text-xs font-medium text-slate-700">
-                    Image URLs (optional)
+                <label className="text-xs font-medium text-text">
+                    Bild-URLs (optional)
                 </label>
-                <p className="text-[11px] text-slate-500">
-                    Paste links to images. First image will be used as the main cover.
+                <p className="text-[11px] text-text-muted">
+                    Fügen Sie Links zu Bildern ein. Das erste Bild wird als Hauptbild verwendet.
                 </p>
                 <div className="space-y-2">
                     {values.images.map((img, index) => (
@@ -429,14 +429,14 @@ export default function EventForm({
                                 type="url"
                                 value={img}
                                 onChange={(e) => handleImageChange(index, e.target.value)}
-                                className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                                className="input flex-1"
                                 placeholder="https://…"
                             />
                             {values.images.length > 1 && (
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveImageField(index)}
-                                    className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
+                                    className="rounded-full border-2 border-border bg-white px-2 py-1 text-xs text-text-muted hover:bg-surface"
                                 >
                                     ✕
                                 </button>
@@ -447,9 +447,9 @@ export default function EventForm({
                 <button
                     type="button"
                     onClick={handleAddImageField}
-                    className="mt-1 text-[11px] font-medium text-emerald-600 hover:text-emerald-700"
+                    className="mt-1 text-[11px] font-medium text-primary hover:opacity-80"
                 >
-                    + Add another image
+                    + Weiteres Bild hinzufügen
                 </button>
             </div>
 
@@ -458,15 +458,15 @@ export default function EventForm({
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+                    className="btn-primary w-full"
                 >
                     {submitting
                         ? mode === "create"
-                            ? "Creating…"
-                            : "Saving…"
+                            ? "Wird erstellt…"
+                            : "Wird gespeichert…"
                         : mode === "create"
-                            ? "Create event"
-                            : "Save changes"}
+                            ? "Veranstaltung erstellen"
+                            : "Änderungen speichern"}
                 </button>
             </div>
         </form>
