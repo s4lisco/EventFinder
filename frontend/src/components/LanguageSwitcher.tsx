@@ -1,9 +1,14 @@
 // frontend/src/components/LanguageSwitcher.tsx
-import { useLocale, useTranslations, locales, Locale } from '@/utils/i18n';
+import { useLocale, locales, Locale } from '@/utils/i18n';
+
+// Map locale codes to flag emojis
+const localeEmojis: Record<Locale, string> = {
+  'de': '🇩🇪',
+  'gsw-CH': '🇨🇭',
+};
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useLocale();
-  const t = useTranslations();
 
   return (
     <div className="relative inline-block">
@@ -14,7 +19,7 @@ export default function LanguageSwitcher() {
       >
         {locales.map((loc) => (
           <option key={loc} value={loc}>
-            {t(`language.${loc}`)}
+            {localeEmojis[loc]}
           </option>
         ))}
       </select>
