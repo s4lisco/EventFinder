@@ -56,26 +56,41 @@ export default function OrganizerLoginPage() {
   return (
     <>
       <Head>
-        <title>Organizer Login | Regional Events</title>
+        <title>Organizer Login | EventFinder</title>
       </Head>
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-        <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-md">
-          <h1 className="text-lg font-semibold text-slate-900">
-            Organizer Login
-          </h1>
-          <p className="mt-1 text-xs text-slate-500">
-            Sign in to manage your events.
-          </p>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-subtle px-4">
+        <div className="w-full max-w-md animate-scale-in rounded-2xl bg-white p-8 shadow-soft-xl">
+          <div className="mb-6 text-center">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-soft-lg">
+              <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gradient">
+              Organizer Login
+            </h1>
+            <p className="mt-2 text-sm text-slate-600">
+              Sign in to manage your events
+            </p>
+          </div>
 
           {error && (
-            <div className="mt-3 rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-xs text-red-700">
-              {error}
+            <div className="mb-4 animate-slide-up rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 shadow-soft">
+              <div className="flex items-start gap-2">
+                <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm font-medium text-red-700">{error}</p>
+              </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-700">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <svg className="h-4 w-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
                 Email
               </label>
               <input
@@ -83,12 +98,15 @@ export default function OrganizerLoginPage() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="input"
                 placeholder="you@example.com"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-slate-700">
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <svg className="h-4 w-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
                 Password
               </label>
               <input
@@ -96,7 +114,7 @@ export default function OrganizerLoginPage() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="input"
                 placeholder="••••••••"
               />
             </div>
@@ -104,9 +122,16 @@ export default function OrganizerLoginPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="btn-primary mt-6 w-full"
             >
-              {submitting ? "Signing in…" : "Sign in"}
+              {submitting ? (
+                <span className="flex items-center gap-2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  Signing in…
+                </span>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </form>
         </div>

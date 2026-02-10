@@ -12,26 +12,34 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-between border-b bg-white px-4 py-2 shadow-sm">
-      <Link href="/" className="text-sm font-semibold text-slate-900">
-        Regional Events
+    <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-slate-200/50 bg-white/80 px-4 py-3 shadow-soft backdrop-blur-xl lg:px-6">
+      <Link href="/" className="group flex items-center gap-2">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-soft transition-all duration-200 group-hover:shadow-glow">
+          <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <span className="hidden text-lg font-bold text-gradient sm:inline">
+          EventFinder
+        </span>
       </Link>
 
-      <div className="flex items-center gap-3 text-xs">
+      <div className="flex items-center gap-2 text-sm">
         {isAuthenticated && role === "organizer" && (
           <Link
             href="/organizers/dashboard"
-            className="text-slate-700 hover:text-slate-900"
+            className="hidden rounded-lg px-3 py-1.5 font-medium text-slate-700 transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700 md:inline-flex"
           >
-            Organizer dashboard
+            Dashboard
           </Link>
         )}
         {isAuthenticated && role === "admin" && (
           <Link
             href="/admin/dashboard"
-            className="text-slate-700 hover:text-slate-900"
+            className="hidden rounded-lg px-3 py-1.5 font-medium text-slate-700 transition-colors duration-200 hover:bg-primary-50 hover:text-primary-700 md:inline-flex"
           >
-            Admin dashboard
+            Admin
           </Link>
         )}
 
@@ -39,15 +47,15 @@ export default function Navbar() {
           <>
             <Link
               href="/organizers/login"
-              className="rounded-full border border-slate-200 px-3 py-1 text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border-2 border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 sm:text-sm"
             >
-              Organizer login
+              Organizer
             </Link>
             <Link
               href="/admin/login"
-              className="rounded-full border border-slate-200 px-3 py-1 text-slate-700 hover:bg-slate-50"
+              className="rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 px-3 py-1.5 text-xs font-semibold text-white shadow-soft transition-all duration-200 hover:shadow-glow active:scale-95 sm:text-sm"
             >
-              Admin login
+              Admin
             </Link>
           </>
         )}
@@ -55,9 +63,9 @@ export default function Navbar() {
         {isAuthenticated && (
           <button
             onClick={handleLogout}
-            className="rounded-full border border-slate-200 px-3 py-1 text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border-2 border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-700 sm:text-sm"
           >
-            Logout{user?.email ? ` (${user.email})` : ""}
+            Logout
           </button>
         )}
       </div>

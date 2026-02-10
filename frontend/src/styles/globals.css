@@ -1,5 +1,88 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+  
+  body {
+    @apply text-slate-800;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Button Styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 px-4 py-2.5 text-sm font-semibold text-white shadow-soft-lg transition-all duration-200 hover:shadow-glow hover:from-primary-700 hover:to-primary-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-soft-lg;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-soft transition-all duration-200 hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 hover:shadow-soft-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .btn-accent {
+    @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 px-4 py-2.5 text-sm font-semibold text-white shadow-soft-lg transition-all duration-200 hover:shadow-glow-accent hover:from-accent-700 hover:to-accent-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  /* Card Styles */
+  .card {
+    @apply rounded-2xl bg-white shadow-soft transition-all duration-200 hover:shadow-soft-lg;
+  }
+  
+  .card-bordered {
+    @apply rounded-2xl border-2 border-slate-100 bg-white shadow-soft transition-all duration-200 hover:border-primary-200 hover:shadow-soft-lg;
+  }
+  
+  /* Input Styles */
+  .input {
+    @apply w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-100;
+  }
+  
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  }
+  
+  .badge-primary {
+    @apply badge bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 ring-1 ring-primary-200;
+  }
+  
+  .badge-success {
+    @apply badge bg-gradient-to-r from-success-100 to-success-50 text-success-700 ring-1 ring-success-200;
+  }
+  
+  .badge-accent {
+    @apply badge bg-gradient-to-r from-accent-100 to-accent-50 text-accent-700 ring-1 ring-accent-200;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-subtle {
+    @apply bg-gradient-to-br from-primary-50 via-white to-accent-50;
+  }
+  
+  .animate-in {
+    @apply animate-fade-in;
+  }
+  
+  .animate-slide-up {
+    @apply animate-slide-up;
+  }
+}
