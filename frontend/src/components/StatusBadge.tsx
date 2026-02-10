@@ -9,8 +9,13 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
       ? status
       : "pending";
 
-  const label =
-    normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
+  const labelMap = {
+    approved: "Genehmigt",
+    rejected: "Abgelehnt",
+    pending: "Ausstehend"
+  };
+  
+  const label = labelMap[normalized];
 
   const colorClasses =
     normalized === "approved"

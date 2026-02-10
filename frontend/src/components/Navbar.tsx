@@ -21,7 +21,7 @@ export default function Navbar() {
           </svg>
         </div>
         <span className="hidden text-lg font-bold text-gradient sm:inline">
-          EventFinder
+          Regivo
         </span>
       </Link>
 
@@ -31,7 +31,7 @@ export default function Navbar() {
             href="/organizers/dashboard"
             className="hidden rounded-button px-4 py-2 font-medium text-text transition-all duration-150 hover:bg-surface md:inline-flex"
           >
-            Dashboard
+            Übersicht
           </Link>
         )}
         {isAuthenticated && role === "admin" && (
@@ -39,7 +39,7 @@ export default function Navbar() {
             href="/admin/dashboard"
             className="hidden rounded-button px-4 py-2 font-medium text-text transition-all duration-150 hover:bg-surface md:inline-flex"
           >
-            Admin
+            Verwaltung
           </Link>
         )}
 
@@ -49,13 +49,13 @@ export default function Navbar() {
               href="/organizers/login"
               className="rounded-button border-2 border-border px-4 py-2 text-xs font-semibold text-text transition-all duration-150 hover:bg-surface sm:text-sm"
             >
-              Organizer
+              Veranstalter
             </Link>
             <Link
               href="/admin/login"
               className="rounded-button bg-gradient-primary px-4 py-2 text-xs font-semibold text-white shadow-soft transition-all duration-150 hover:opacity-90 sm:text-sm"
             >
-              Admin
+              Verwaltung
             </Link>
           </>
         )}
@@ -65,7 +65,7 @@ export default function Navbar() {
             onClick={handleLogout}
             className="rounded-button border-2 border-border px-4 py-2 text-xs font-semibold text-text transition-all duration-150 hover:border-red-500/30 hover:bg-red-50 hover:text-red-700 sm:text-sm"
           >
-            Logout
+            Abmelden
           </button>
         )}
       </div>

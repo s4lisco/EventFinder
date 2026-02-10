@@ -39,7 +39,7 @@ export default function EventCard({
       : undefined);
 
   const distanceLabel =
-    distance !== undefined ? `${distance.toFixed(1)} km away` : "";
+    distance !== undefined ? `${distance.toFixed(1)} km entfernt` : "";
 
   return (
     <Link
@@ -88,7 +88,7 @@ export default function EventCard({
             </span>
           )}
           <span className="ml-auto badge-success">
-            {event.priceInfo || "Free"}
+            {event.priceInfo || "Kostenlos"}
           </span>
         </div>
       </div>

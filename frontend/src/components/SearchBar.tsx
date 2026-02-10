@@ -32,7 +32,7 @@ export default function SearchBar({
           type="text"
           value={searchText}
           onChange={(e) => onSearchTextChange(e.target.value)}
-          placeholder="Search events by title, description..."
+          placeholder="Suche nach Veranstaltungen..."
           className="w-full border-none bg-transparent text-sm font-medium text-text placeholder:text-text-muted focus:outline-none"
         />
         {searchText && (

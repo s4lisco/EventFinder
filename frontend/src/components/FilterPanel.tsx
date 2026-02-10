@@ -7,12 +7,12 @@ interface FilterPanelProps {
 }
 
 const CATEGORY_OPTIONS = [
-  { value: "", label: "All categories", icon: "🎯" },
-  { value: "music", label: "Music", icon: "🎵" },
-  { value: "sports", label: "Sports", icon: "⚽" },
-  { value: "family", label: "Family", icon: "👨‍👩‍👧" },
-  { value: "arts", label: "Arts & Culture", icon: "🎨" },
-  { value: "food", label: "Food & Drinks", icon: "🍴" },
+  { value: "", label: "Alle Kategorien", icon: "🎯" },
+  { value: "music", label: "Musik", icon: "🎵" },
+  { value: "sports", label: "Sport", icon: "⚽" },
+  { value: "family", label: "Familie", icon: "👨‍👩‍👧" },
+  { value: "arts", label: "Kunst & Kultur", icon: "🎨" },
+  { value: "food", label: "Essen & Trinken", icon: "🍴" },
 ];
 
 export default function FilterPanel({
@@ -51,7 +51,7 @@ export default function FilterPanel({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          Distance Radius
+          Umkreis
         </label>
         <div className="relative">
           <input

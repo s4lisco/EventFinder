@@ -23,10 +23,10 @@ export default function ApprovalModal({
   if (!open) return null;
 
   const isReject = mode === "reject";
-  const title = isReject ? "Reject event" : "Approve event";
+  const title = isReject ? "Veranstaltung ablehnen" : "Veranstaltung genehmigen";
   const description = isReject
-    ? `Optionally provide a reason for rejecting "${eventTitle}".`
-    : `Are you sure you want to approve "${eventTitle}"?`;
+    ? `Optional können Sie einen Grund für die Ablehnung von "${eventTitle}" angeben.`
+    : `Sind Sie sicher, dass Sie "${eventTitle}" genehmigen möchten?`;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,13 +45,13 @@ export default function ApprovalModal({
         {isReject && (
           <div className="mt-3 space-y-1">
             <label className="text-[11px] font-medium text-text">
-              Admin comment (optional)
+              Admin-Kommentar (optional)
             </label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="min-h-[80px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-500/10"
-              placeholder="Short explanation for the organizer…"
+              placeholder="Kurze Erklärung für den Veranstalter…"
             />
           </div>
         )}
@@ -63,7 +63,7 @@ export default function ApprovalModal({
             disabled={loading}
             className="btn-secondary text-xs"
           >
-            Cancel
+            Abbrechen
           </button>
           <button
             type="submit"
@@ -76,11 +76,11 @@ export default function ApprovalModal({
           >
             {loading
               ? isReject
-                ? "Rejecting…"
-                : "Approving…"
+                ? "Wird abgelehnt…"
+                : "Wird genehmigt…"
               : isReject
-              ? "Reject event"
-              : "Approve event"}
+              ? "Veranstaltung ablehnen"
+              : "Veranstaltung genehmigen"}
           </button>
         </div>
       </form>

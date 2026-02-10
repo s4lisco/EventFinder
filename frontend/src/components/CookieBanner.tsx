@@ -62,12 +62,10 @@ export default function CookieBanner() {
               </div>
               <div className="flex-1 pt-0.5">
                 <h3 className="text-sm font-bold text-text sm:text-base">
-                  We value your privacy
+                  Wir schätzen Ihre Privatsphäre
                 </h3>
                 <p className="mt-1 text-xs text-text-muted sm:text-sm">
-                  We use cookies to enhance your browsing experience, provide personalized 
-                  content, and analyze our traffic. By clicking "Accept All", you consent 
-                  to our use of cookies.
+                  Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern, personalisierte Inhalte bereitzustellen und unseren Traffic zu analysieren. Durch Klicken auf "Alle akzeptieren" stimmen Sie unserer Verwendung von Cookies zu.
                 </p>
               </div>
             </div>
@@ -78,13 +76,13 @@ export default function CookieBanner() {
                 onClick={handleDecline}
                 className="btn-secondary whitespace-nowrap text-xs sm:text-sm"
               >
-                Decline
+                Ablehnen
               </button>
               <button
                 onClick={handleAccept}
                 className="btn-primary whitespace-nowrap text-xs sm:text-sm"
               >
-                Accept All
+                Alle akzeptieren
               </button>
             </div>
           </div>
@@ -97,10 +95,10 @@ export default function CookieBanner() {
               onClick={(e) => {
                 e.preventDefault();
                 // You can add a link to your privacy policy here
-                alert('Privacy policy link would go here');
+                alert('Link zur Datenschutzerklärung würde hier stehen');
               }}
             >
-              Learn more about our privacy policy
+              Erfahren Sie mehr über unsere Datenschutzerklärung
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

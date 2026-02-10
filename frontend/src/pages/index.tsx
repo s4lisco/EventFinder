@@ -88,7 +88,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Discover Events Near You | EventFinder</title>
+        <title>Veranstaltungen in Ihrer Nähe | Regivo</title>
       </Head>
       <div className="flex min-h-screen flex-col bg-white">
         <header className="border-b border-border bg-white px-4 py-4 shadow-soft lg:px-6">
@@ -101,10 +101,10 @@ export default function HomePage() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gradient">
-                Events Near You
+                Veranstaltungen in Ihrer Nähe
               </h1>
               <p className="text-sm text-text-muted">
-                Discover amazing local events on the map
+                Entdecken Sie tolle lokale Veranstaltungen auf der Karte
               </p>
             </div>
           </div>
@@ -129,10 +129,10 @@ export default function HomePage() {
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
-                    Filters
+                    Filter
                   </span>
                   <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                    {isFilterOpen ? "Hide" : "Show"}
+                    {isFilterOpen ? "Ausblenden" : "Anzeigen"}
                   </span>
                 </button>
                 <div className="mt-3 hidden lg:block">
@@ -169,7 +169,7 @@ export default function HomePage() {
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
-                  Map
+                  Karte
                 </button>
                 <button
                   className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-150 ${
@@ -182,7 +182,7 @@ export default function HomePage() {
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                   </svg>
-                  List
+                  Liste
                 </button>
               </div>
             </div>
@@ -212,7 +212,7 @@ export default function HomePage() {
               {loading && (
                 <div className="flex items-center gap-2 py-4 text-sm text-text-muted">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                  Loading events…
+                  Lade Veranstaltungen…
                 </div>
               )}
               {error && (
@@ -221,9 +221,9 @@ export default function HomePage() {
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Error loading events
+                    Fehler beim Laden der Veranstaltungen
                   </div>
-                  <p className="mt-1 text-xs">Please try again later.</p>
+                  <p className="mt-1 text-xs">Bitte versuchen Sie es später erneut.</p>
                 </div>
               )}
               {!loading && !error && sortedForList.length === 0 && (
@@ -233,8 +233,8 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <p className="text-sm font-semibold text-text">No events found</p>
-                  <p className="mt-1 text-xs text-text-muted">Try adjusting your filters or search</p>
+                  <p className="text-sm font-semibold text-text">Keine Veranstaltungen gefunden</p>
+                  <p className="mt-1 text-xs text-text-muted">Versuchen Sie, Ihre Filter anzupassen</p>
                 </div>
               )}
 

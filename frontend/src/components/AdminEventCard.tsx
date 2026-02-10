@@ -37,7 +37,7 @@ export default function AdminEventCard({
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Pending Review
+            Ausstehend
           </span>
         </div>
         <div className="flex items-center gap-2 text-sm text-text-muted">
@@ -73,7 +73,7 @@ export default function AdminEventCard({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
-          View
+          Ansehen
         </Link>
         <button
           type="button"
@@ -84,14 +84,14 @@ export default function AdminEventCard({
           {isApproving ? (
             <span className="flex items-center gap-1">
               <div className="h-3 w-3 animate-spin rounded-full border-2 border-success-700 border-t-transparent"></div>
-              Approving…
+              Wird genehmigt…
             </span>
           ) : (
             <>
               <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Approve
+              Genehmigen
             </>
           )}
         </button>
@@ -104,14 +104,14 @@ export default function AdminEventCard({
           {isRejecting ? (
             <span className="flex items-center gap-1">
               <div className="h-3 w-3 animate-spin rounded-full border-2 border-red-700 border-t-transparent"></div>
-              Rejecting…
+              Wird abgelehnt…
             </span>
           ) : (
             <>
               <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Reject
+              Ablehnen
             </>
           )}
         </button>
