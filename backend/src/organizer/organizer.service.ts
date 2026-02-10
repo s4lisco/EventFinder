@@ -82,7 +82,9 @@ export class OrganizerService {
       role: 'organizer',
     };
 
+    console.log('🔐 Signing JWT with payload:', payload);
     const accessToken = await this.jwtService.signAsync(payload);
+    console.log('🔐 JWT signed, token length:', accessToken.length);
     return { accessToken };
   }
 

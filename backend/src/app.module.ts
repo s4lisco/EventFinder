@@ -9,10 +9,6 @@ import { AdminModule } from './admin/admin.module';
 import { FlyerModule } from './flyer/flyer.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
-import * as dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
 
 @Module({
   imports: [
