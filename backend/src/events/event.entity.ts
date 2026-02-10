@@ -5,11 +5,13 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Point } from 'geojson'; // ✅ correct import
 import { Organizer } from '../organizer/organizer.entity';
+import { EventImage } from './entities/event-image.entity';
 
 export enum EventStatus {
   PENDING = 'pending',
@@ -93,6 +95,9 @@ export class Event {
     onDelete: 'SET NULL',
   })
   organizer!: Organizer;
+
+  @OneToMany(() => EventImage, (eventImage) => eventImage.event)
+  eventImages!: EventImage[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
