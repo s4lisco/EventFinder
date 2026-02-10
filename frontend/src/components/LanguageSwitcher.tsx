@@ -1,5 +1,5 @@
 // frontend/src/components/LanguageSwitcher.tsx
-import { useLocale, useTranslations, locales } from '@/utils/i18n';
+import { useLocale, useTranslations, locales, Locale } from '@/utils/i18n';
 
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useLocale();
@@ -9,7 +9,7 @@ export default function LanguageSwitcher() {
     <div className="relative inline-block">
       <select
         value={locale}
-        onChange={(e) => setLocale(e.target.value as any)}
+        onChange={(e) => setLocale(e.target.value as Locale)}
         className="appearance-none rounded-button border-2 border-border bg-white px-3 py-2 pr-8 text-xs font-semibold text-text transition-all duration-150 hover:bg-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:text-sm"
       >
         {locales.map((loc) => (
