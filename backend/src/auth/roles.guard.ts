@@ -18,8 +18,6 @@ export class RolesGuard implements CanActivate {
     // 👇 1) Skip if route has @Public()
     const isPublic = this.reflector.get<boolean>('isPublic', handler);
 
-      console.log('👀 RolesGuard - isPublic?', isPublic); // ADD THIS
-
     if (isPublic) {
       return true;
     }

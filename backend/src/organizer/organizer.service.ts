@@ -57,9 +57,6 @@ export class OrganizerService {
     const organizer = await this.organizerRepository.findOne({
       where: { email: email.toLowerCase() },
     });
-     console.log('▶ Organizer found:', organizer);
-  console.log('▶ Incoming password:', password);
-  console.log('▶ Stored hash:', organizer?.passwordHash);
 
     if (!organizer) {
       throw new UnauthorizedException('Invalid credentials');
@@ -82,9 +79,7 @@ export class OrganizerService {
       role: 'organizer',
     };
 
-    console.log('🔐 Signing JWT with payload:', payload);
     const accessToken = await this.jwtService.signAsync(payload);
-    console.log('🔐 JWT signed, token length:', accessToken.length);
     return { accessToken };
   }
 

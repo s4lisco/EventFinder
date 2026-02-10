@@ -12,17 +12,14 @@ export type JwtPayload = {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
-    const secret = process.env.JWT_SECRET || 'change_me_in_prod';
-    console.log('🔑 JWT Strategy initialized with secret length:', secret.length);
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: secret,
+      secretOrKey: process.env.JWT_SECRET || 'change_me_in_prod',
     });
   }
 
   async validate(payload: JwtPayload) {
-    console.log('✅ JWT validated for:', payload);
     // This attaches to req.user
     return {
       userId: payload.sub,

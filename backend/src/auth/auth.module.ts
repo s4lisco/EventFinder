@@ -4,14 +4,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 
-const jwtSecret = process.env.JWT_SECRET || 'change_me_in_prod';
-console.log('🔐 AuthModule - JWT secret length:', jwtSecret.length);
-
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: jwtSecret,
+      secret: process.env.JWT_SECRET || 'change_me_in_prod',
       signOptions: { expiresIn: '7d' },
     }),
   ],
