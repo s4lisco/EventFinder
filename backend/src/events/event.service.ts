@@ -9,6 +9,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event, EventStatus } from './event.entity';
 import { EventImage } from './entities/event-image.entity';
+import { Organizer } from '../organizer/organizer.entity';
 import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -33,6 +34,8 @@ export class EventService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(EventImage)
     private readonly eventImageRepository: Repository<EventImage>,
+    @InjectRepository(Organizer)
+    private readonly organizerRepository: Repository<Organizer>,
     @Inject('StorageService')
     private readonly storageService: StorageService,
   ) {}
@@ -97,6 +100,17 @@ export class EventService {
     organizerId: string,
     dto: CreateEventDto,
   ): Promise<Event> {
+    // Validate that the organizer exists
+    const organizer = await this.organizerRepository.findOne({
+      where: { id: organizerId },
+    });
+
+    if (!organizer) {
+      throw new NotFoundException(
+        `Organizer with id "${organizerId}" not found. Please ensure you are logged in with a valid account.`,
+      );
+    }
+
     const locationPoint: Point = {
       type: 'Point',
       coordinates: [dto.longitude, dto.latitude],

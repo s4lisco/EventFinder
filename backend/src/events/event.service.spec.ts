@@ -4,6 +4,7 @@ import { EventService } from './event.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Event } from './event.entity';
 import { EventImage } from './entities/event-image.entity';
+import { Organizer } from '../organizer/organizer.entity';
 import { Repository } from 'typeorm';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
@@ -11,6 +12,7 @@ describe('EventService', () => {
   let service: EventService;
   let eventRepo: Repository<Event>;
   let imageRepo: Repository<EventImage>;
+  let organizerRepo: Repository<Organizer>;
   let storageService: any;
 
   beforeEach(async () => {
@@ -37,6 +39,12 @@ describe('EventService', () => {
           },
         },
         {
+          provide: getRepositoryToken(Organizer),
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
+        {
           provide: 'StorageService',
           useValue: {
             store: jest.fn(),
@@ -50,6 +58,7 @@ describe('EventService', () => {
     service = module.get<EventService>(EventService);
     eventRepo = module.get<Repository<Event>>(getRepositoryToken(Event));
     imageRepo = module.get<Repository<EventImage>>(getRepositoryToken(EventImage));
+    organizerRepo = module.get<Repository<Organizer>>(getRepositoryToken(Organizer));
     storageService = module.get('StorageService');
   });
 
@@ -57,6 +66,7 @@ describe('EventService', () => {
     expect(service).toBeDefined();
     expect(eventRepo).toBeDefined();
     expect(imageRepo).toBeDefined();
+    expect(organizerRepo).toBeDefined();
     expect(storageService).toBeDefined();
   });
 
@@ -145,5 +155,75 @@ describe('EventService', () => {
     });
   });
 
-  // TODO: add tests for findAll filters, create, update, remove
+  describe('createForOrganizer', () => {
+    it('should create event successfully when organizer exists', async () => {
+      const mockOrganizer = {
+        id: 'organizer-1',
+        name: 'Test Organizer',
+        email: 'test@example.com',
+      } as Organizer;
+
+      const createEventDto = {
+        title: 'Test Event',
+        description: 'Test Description',
+        startDate: '2026-03-01T18:00:00Z',
+        endDate: '2026-03-01T22:00:00Z',
+        category: 'music',
+        locationName: 'Test Venue',
+        address: '123 Test St',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        organizerName: 'Test Organizer',
+        priceInfo: 'Free',
+        website: 'https://test.com',
+        images: [],
+      };
+
+      const mockEvent = {
+        id: 'event-1',
+        ...createEventDto,
+        organizerId: 'organizer-1',
+      } as unknown as Event;
+
+      jest.spyOn(organizerRepo, 'findOne').mockResolvedValue(mockOrganizer);
+      jest.spyOn(eventRepo, 'create').mockReturnValue(mockEvent);
+      jest.spyOn(eventRepo, 'save').mockResolvedValue(mockEvent);
+
+      const result = await service.createForOrganizer('organizer-1', createEventDto);
+
+      expect(organizerRepo.findOne).toHaveBeenCalledWith({ where: { id: 'organizer-1' } });
+      expect(result).toBeDefined();
+      expect(result.id).toBe('event-1');
+    });
+
+    it('should throw NotFoundException when organizer does not exist', async () => {
+      const createEventDto = {
+        title: 'Test Event',
+        description: 'Test Description',
+        startDate: '2026-03-01T18:00:00Z',
+        endDate: '2026-03-01T22:00:00Z',
+        category: 'music',
+        locationName: 'Test Venue',
+        address: '123 Test St',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        organizerName: 'Test Organizer',
+        priceInfo: 'Free',
+        website: 'https://test.com',
+        images: [],
+      };
+
+      jest.spyOn(organizerRepo, 'findOne').mockResolvedValue(null);
+
+      await expect(
+        service.createForOrganizer('invalid-organizer-id', createEventDto),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(organizerRepo.findOne).toHaveBeenCalledWith({ where: { id: 'invalid-organizer-id' } });
+      expect(eventRepo.create).not.toHaveBeenCalled();
+      expect(eventRepo.save).not.toHaveBeenCalled();
+    });
+  });
+
+  // TODO: add tests for findAll filters, update, remove
 });
