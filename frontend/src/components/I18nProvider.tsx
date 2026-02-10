@@ -1,6 +1,8 @@
 // frontend/src/components/I18nProvider.tsx
 import { ReactNode, useEffect, useState } from 'react';
 import { I18nContext, Locale, defaultLocale, locales, getNestedValue } from '@/utils/i18n';
+import deMessages from '../../messages/de.json';
+import gswMessages from '../../messages/gsw-CH.json';
 
 interface I18nProviderProps {
   children: ReactNode;
@@ -8,23 +10,28 @@ interface I18nProviderProps {
 
 const LOCALE_COOKIE = 'NEXT_LOCALE';
 
-export function I18nProvider({ children }: I18nProviderProps) {
-  const [locale, setLocaleState] = useState<Locale>(defaultLocale);
-  const [messages, setMessages] = useState<Record<string, any>>({});
+const messagesByLocale = {
+  'de': deMessages,
+  'gsw-CH': gswMessages,
+};
 
-  // Load locale from cookie/localStorage on mount
-  useEffect(() => {
-    const savedLocale = getCookie(LOCALE_COOKIE) || localStorage.getItem(LOCALE_COOKIE);
-    if (savedLocale && locales.includes(savedLocale as Locale)) {
-      setLocaleState(savedLocale as Locale);
+export function I18nProvider({ children }: I18nProviderProps) {
+  // Initialize with saved locale if available
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLocale = getCookie(LOCALE_COOKIE) || localStorage.getItem(LOCALE_COOKIE);
+      if (savedLocale && locales.includes(savedLocale as Locale)) {
+        return savedLocale as Locale;
+      }
     }
-  }, []);
+    return defaultLocale;
+  });
+
+  const [messages, setMessages] = useState<Record<string, any>>(messagesByLocale[locale]);
 
   // Load messages when locale changes
   useEffect(() => {
-    import(`../../messages/${locale}.json`)
-      .then((module) => setMessages(module.default))
-      .catch(() => setMessages({}));
+    setMessages(messagesByLocale[locale]);
   }, [locale]);
 
   const setLocale = (newLocale: Locale) => {
