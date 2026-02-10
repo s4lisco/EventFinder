@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { EventImage } from "@/types/event";
 
 interface ImageUploadFieldProps {
@@ -22,6 +22,15 @@ export default function ImageUploadField({
 
   const totalImageCount = existingImages.length + selectedFiles.length;
   const canAddMore = totalImageCount < 3;
+
+  // Cleanup preview URLs on unmount
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [previewUrls]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);

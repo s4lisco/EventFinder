@@ -109,7 +109,7 @@ export default function OrganizerCreateEventPage() {
               onSubmit={handleSubmit}
               selectedFiles={selectedFiles}
               onFilesChange={setSelectedFiles}
-              showImageUpload={false}
+              showImageUpload={true}
             />
           </div>
         </main>

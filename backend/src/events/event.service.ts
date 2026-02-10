@@ -145,7 +145,14 @@ export class EventService {
     id: string,
     user: { userId: string; role: string },
   ): Promise<void> {
-    const event = await this.findOne(id);
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      relations: ['eventImages'],
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Event with id "${id}" not found`);
+    }
 
     if (user.role !== 'admin' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
