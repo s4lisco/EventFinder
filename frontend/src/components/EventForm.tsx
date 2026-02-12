@@ -430,7 +430,7 @@ export default function EventForm({
             </div>
 
             {/* Images - Use new upload component if enabled, otherwise fallback to URL inputs */}
-            {showImageUpload && eventId ? (
+            {showImageUpload ? (
                 <ImageUploadField
                     existingImages={existingImages}
                     onDelete={onDeleteImage}
