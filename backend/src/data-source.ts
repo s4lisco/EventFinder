@@ -1,12 +1,13 @@
+import './config'; // Load environment variables first
 import { DataSource } from 'typeorm';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST,
+  host: process.env.DB_HOST || 'localhost',
   port: +(process.env.DB_PORT || 5432),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  username: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'postgres',
+  database: process.env.DB_NAME || 'eventfinder',
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
   synchronize: false,

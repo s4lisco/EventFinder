@@ -1,22 +1,43 @@
 // backend/src/event/event.service.ts
 import {
+  BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event, EventStatus } from './event.entity';
+import { EventImage } from './entities/event-image.entity';
+import { Organizer } from '../organizer/organizer.entity';
 import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { FilterEventsDto } from './dto/filter-events.dto';
 import { Point } from 'typeorm';
+import { StorageService } from './storage/storage.interface';
+
+// Define Multer File type inline
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+}
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
+    @InjectRepository(EventImage)
+    private readonly eventImageRepository: Repository<EventImage>,
+    @InjectRepository(Organizer)
+    private readonly organizerRepository: Repository<Organizer>,
+    @Inject('StorageService')
+    private readonly storageService: StorageService,
   ) {}
 
   async findAll(filters: FilterEventsDto): Promise<Event[]> {
@@ -67,7 +88,10 @@ export class EventService {
   }
 
   async findOne(id: string): Promise<Event> {
-    const event = await this.eventRepository.findOne({ where: { id } });
+    const event = await this.eventRepository.findOne({ 
+      where: { id },
+      relations: ['eventImages'],
+    });
     if (!event) throw new NotFoundException(`Event with id "${id}" not found`);
     return event;
   }
@@ -76,6 +100,17 @@ export class EventService {
     organizerId: string,
     dto: CreateEventDto,
   ): Promise<Event> {
+    // Validate that the organizer exists
+    const organizer = await this.organizerRepository.findOne({
+      where: { id: organizerId },
+    });
+
+    if (!organizer) {
+      throw new NotFoundException(
+        `Organizer with id "${organizerId}" not found. Please ensure you are logged in with a valid account.`,
+      );
+    }
+
     const locationPoint: Point = {
       type: 'Point',
       coordinates: [dto.longitude, dto.latitude],
@@ -100,7 +135,7 @@ export class EventService {
   ): Promise<Event> {
     const event = await this.findOne(id);
 
-    if (user.role !== 'admin' && event.organizerId !== user.userId) {
+    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to update this event.',
       );
@@ -124,14 +159,99 @@ export class EventService {
     id: string,
     user: { userId: string; role: string },
   ): Promise<void> {
-    const event = await this.findOne(id);
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      relations: ['eventImages'],
+    });
 
-    if (user.role !== 'admin' && event.organizerId !== user.userId) {
+    if (!event) {
+      throw new NotFoundException(`Event with id "${id}" not found`);
+    }
+
+    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to delete this event.',
       );
     }
 
+    // Delete all event images from storage before removing event
+    if (event.eventImages && event.eventImages.length > 0) {
+      const storageKeys = event.eventImages.map(img => img.storageKey);
+      await this.storageService.deleteMany(storageKeys);
+    }
+
     await this.eventRepository.remove(event);
+  }
+
+  async uploadImages(
+    eventId: string,
+    user: { userId: string; role: string },
+    files: MulterFile[],
+  ): Promise<EventImage[]> {
+    const event = await this.findOne(eventId);
+
+    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+      throw new ForbiddenException(
+        'You are not allowed to upload images for this event.',
+      );
+    }
+
+    // Check current image count
+    const currentCount = event.eventImages?.length || 0;
+    const newCount = files.length;
+
+    if (currentCount + newCount > 3) {
+      throw new BadRequestException(
+        `Cannot upload ${newCount} images. Event already has ${currentCount} images. Maximum is 3.`,
+      );
+    }
+
+    // Upload files and create event image records
+    const eventImages: EventImage[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const { key, url } = await this.storageService.store(file, eventId);
+      
+      const eventImage = this.eventImageRepository.create({
+        eventId,
+        storageKey: key,
+        url,
+        position: currentCount + i,
+      });
+
+      eventImages.push(await this.eventImageRepository.save(eventImage));
+    }
+
+    return eventImages;
+  }
+
+  async deleteImage(
+    eventId: string,
+    imageId: string,
+    user: { userId: string; role: string },
+  ): Promise<void> {
+    const event = await this.findOne(eventId);
+
+    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+      throw new ForbiddenException(
+        'You are not allowed to delete images for this event.',
+      );
+    }
+
+    const image = await this.eventImageRepository.findOne({
+      where: { id: imageId, eventId },
+    });
+
+    if (!image) {
+      throw new NotFoundException(
+        `Image with id "${imageId}" not found for event "${eventId}"`,
+      );
+    }
+
+    // Delete from storage
+    await this.storageService.delete(image.storageKey);
+
+    // Delete from database
+    await this.eventImageRepository.remove(image);
   }
 }

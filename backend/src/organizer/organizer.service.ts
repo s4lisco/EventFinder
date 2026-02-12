@@ -57,9 +57,6 @@ export class OrganizerService {
     const organizer = await this.organizerRepository.findOne({
       where: { email: email.toLowerCase() },
     });
-     console.log('▶ Organizer found:', organizer);
-  console.log('▶ Incoming password:', password);
-  console.log('▶ Stored hash:', organizer?.passwordHash);
 
     if (!organizer) {
       throw new UnauthorizedException('Invalid credentials');

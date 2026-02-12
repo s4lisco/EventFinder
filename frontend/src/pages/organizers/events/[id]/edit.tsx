@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import EventForm, { EventFormValues } from "@/components/EventForm";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useEventMutation } from "@/hooks/useEventMutation";
+import { useEventImages } from "@/hooks/useEventImages";
 import { useEvent } from "@/hooks/useEvent";
 import { isoToLocalInput } from "@/utils/datetime";
 
@@ -13,12 +14,14 @@ export default function OrganizerEditEventPage() {
   const { id } = router.query;
   const { token, checked } = useRequireAuth();
   const { updateEvent, loading, error } = useEventMutation(token || undefined);
-  const { event, loading: loadingEvent, error: eventError } = useEvent(
+  const { uploadImages, deleteImage, uploading } = useEventImages(token || undefined);
+  const { event, loading: loadingEvent, error: eventError, refetch } = useEvent(
     typeof id === "string" ? id : undefined,
   );
   const [initialValues, setInitialValues] = useState<EventFormValues | null>(
     null,
   );
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   useEffect(() => {
     if (event) {
@@ -42,9 +45,25 @@ export default function OrganizerEditEventPage() {
 
   const handleSubmit = async (values: EventFormValues) => {
     if (!id || typeof id !== "string") return;
+    
+    // First update the event
     const updated = await updateEvent(id, values);
     if (updated) {
+      // If there are new files to upload, upload them
+      if (selectedFiles.length > 0) {
+        await uploadImages(id, selectedFiles);
+        setSelectedFiles([]);
+      }
       router.push("/organizers/dashboard");
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    if (!id || typeof id !== "string") return;
+    const success = await deleteImage(id, imageId);
+    if (success && refetch) {
+      // Refetch event to update images list
+      await refetch();
     }
   };
 
@@ -65,6 +84,8 @@ export default function OrganizerEditEventPage() {
   if (!token) {
     return null;
   }
+
+  const isSubmitting = loading || uploading;
 
   return (
     <>
@@ -94,13 +115,19 @@ export default function OrganizerEditEventPage() {
                 Failed to load event: {eventError}
               </p>
             )}
-            {initialValues && (
+            {initialValues && event && (
               <EventForm
                 mode="edit"
                 initialValues={initialValues}
-                submitting={loading}
+                submitting={isSubmitting}
                 error={error}
                 onSubmit={handleSubmit}
+                eventId={event.id}
+                existingImages={event.eventImages || []}
+                selectedFiles={selectedFiles}
+                onFilesChange={setSelectedFiles}
+                onDeleteImage={handleDeleteImage}
+                showImageUpload={true}
               />
             )}
           </div>

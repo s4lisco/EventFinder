@@ -30,8 +30,6 @@ export class OrganizerController {
   @Public()
   @Post('login')
   async login(@Body() dto: LoginOrganizerDto) {
-      console.log('🟢 Reached login controller with DTO:', dto);  // 👈 add this
-
     return this.organizerService.login(dto);
   }
 
