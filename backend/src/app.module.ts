@@ -13,11 +13,11 @@ import { RolesGuard } from './auth/roles.guard';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'postgres',
-      port: Number(process.env.DB_PORT) || 5432,
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
+      type: 'mysql',
+      host: process.env.DB_HOST || 'mysql',
+      port: Number(process.env.DB_PORT) || 3306,
+      username: process.env.DB_USER || 'mysql',
+      password: process.env.DB_PASSWORD || 'mysql',
       database: process.env.DB_NAME || 'events',
       autoLoadEntities: true,
       synchronize: false,

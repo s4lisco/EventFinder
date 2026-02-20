@@ -9,60 +9,37 @@ export class CreateAdminsAndModeration1710000003000
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Admins table
     await queryRunner.query(`
-      CREATE TABLE "admins" (
-        "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-        "name" varchar(255) NOT NULL,
-        "email" varchar(255) NOT NULL,
-        "password_hash" varchar(255) NOT NULL,
-        "role" varchar(50) NOT NULL DEFAULT 'admin',
-        "created_at" timestamptz NOT NULL DEFAULT now(),
-        "updated_at" timestamptz NOT NULL DEFAULT now(),
-        CONSTRAINT "PK_admins_id" PRIMARY KEY ("id"),
-        CONSTRAINT "UQ_admins_email" UNIQUE ("email")
-      );
+      CREATE TABLE \`admins\` (
+        \`id\` varchar(36) NOT NULL,
+        \`name\` varchar(255) NOT NULL,
+        \`email\` varchar(255) NOT NULL,
+        \`password_hash\` varchar(255) NOT NULL,
+        \`role\` varchar(50) NOT NULL DEFAULT 'admin',
+        \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+        PRIMARY KEY (\`id\`),
+        UNIQUE KEY \`UQ_admins_email\` (\`email\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
     await queryRunner.query(`
-      CREATE INDEX "IDX_admin_email" ON "admins" ("email");
-    `);
-
-    // Event moderation fields
-    await queryRunner.query(`
-      ALTER TABLE "events"
-      ADD COLUMN IF NOT EXISTS "status" varchar NOT NULL DEFAULT 'pending';
-    `);
-
-    await queryRunner.query(`
-      ALTER TABLE "events"
-      ADD COLUMN IF NOT EXISTS "adminComment" text;
+      CREATE INDEX \`IDX_admin_email\` ON \`admins\` (\`email\`);
     `);
 
     // Organizer activation flag (optional)
     await queryRunner.query(`
-      ALTER TABLE "organizers"
-      ADD COLUMN IF NOT EXISTS "isActive" boolean NOT NULL DEFAULT true;
+      ALTER TABLE \`organizers\`
+      ADD COLUMN \`isActive\` tinyint(1) NOT NULL DEFAULT 1;
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      ALTER TABLE "organizers"
-      DROP COLUMN IF EXISTS "isActive";
+      ALTER TABLE \`organizers\`
+      DROP COLUMN \`isActive\`;
     `);
 
-    await queryRunner.query(`
-      ALTER TABLE "events"
-      DROP COLUMN IF EXISTS "adminComment";
-    `);
-
-    // Depending on earlier schema, you might not want to drop status,
-    // but for symmetry we do:
-    await queryRunner.query(`
-      ALTER TABLE "events"
-      DROP COLUMN IF EXISTS "status";
-    `);
-
-    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_admin_email";`);
-    await queryRunner.query(`DROP TABLE "admins";`);
+    await queryRunner.query(`DROP INDEX \`IDX_admin_email\` ON \`admins\`;`);
+    await queryRunner.query(`DROP TABLE IF EXISTS \`admins\`;`);
   }
 }
