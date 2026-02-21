@@ -32,6 +32,12 @@ services:
     container_name: backend
     env_file:
       - ./backend/.env
+    environment:
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_USER: mysql
+      DB_PASSWORD: mysql
+      DB_NAME: eventfinder
     depends_on:
       mysql:
         condition: service_healthy
