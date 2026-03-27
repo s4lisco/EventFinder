@@ -1,9 +1,9 @@
 -- Seed test data for EventFinder (MySQL)
 -- Usage: docker exec -i mysql mysql -u mysql -pmysql eventfinder < temp/seed-test-data.sql
 
--------------------------------------------------
+-- -----------------------------------------------
 -- INSERT ADMIN (skip if email already exists)
--------------------------------------------------
+-- -----------------------------------------------
 INSERT IGNORE INTO `admins` (
     `id`, `name`, `email`, `password_hash`, `role`, `created_at`, `updated_at`
 )
@@ -17,9 +17,9 @@ VALUES (
     NOW()
 );
 
--------------------------------------------------
+-- -----------------------------------------------
 -- INSERT ORGANIZER (skip if email already exists)
--------------------------------------------------
+-- -----------------------------------------------
 INSERT IGNORE INTO `organizers` (
     `id`, `name`, `email`, `password_hash`, `isActive`, `created_at`, `updated_at`
 )
@@ -33,9 +33,9 @@ VALUES (
     NOW()
 );
 
--------------------------------------------------
+-- -----------------------------------------------
 -- INSERT EVENTS
--------------------------------------------------
+-- -----------------------------------------------
 SET @org_id = (SELECT `id` FROM `organizers` WHERE `email` = 'organizer@events.com');
 
 INSERT INTO `events` (
