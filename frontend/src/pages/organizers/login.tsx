@@ -20,7 +20,7 @@ export default function OrganizerLoginPage() {
     setError(null);
 
     if (!email || !password) {
-      setError("Bitte geben Sie E-Mail und Passwort ein.");
+      setError("Please enter your email and password.");
       return;
     }
 
@@ -41,13 +41,13 @@ export default function OrganizerLoginPage() {
       const accessToken = data.accessToken || data.token;
 
       if (!accessToken) {
-        throw new Error("Kein Zugriffstoken vom Server erhalten.");
+        throw new Error("No access token received from server.");
       }
 
       login(accessToken);
       router.push("/organizers/dashboard");
     } catch (err: any) {
-      setError(err.message || "Anmeldung fehlgeschlagen");
+      setError(err.message || "Login failed");
     } finally {
       setSubmitting(false);
     }
@@ -56,84 +56,90 @@ export default function OrganizerLoginPage() {
   return (
     <>
       <Head>
-        <title>Veranstalter-Anmeldung | Regivo</title>
+        <title>Organizer Login | The Urban Pulse</title>
       </Head>
-      <div className="flex min-h-screen items-center justify-center bg-white px-4">
-        <div className="w-full max-w-md animate-scale-in rounded-card bg-white p-8 shadow-soft-xl">
-          <div className="mb-6 text-center">
-            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-button bg-gradient-primary shadow-soft">
-              <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      <div className="flex min-h-screen items-center justify-center bg-surface px-4 py-12">
+        {/* Split layout on desktop */}
+        <div className="w-full max-w-md animate-scale-in">
+          {/* Header */}
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-button bg-primary shadow-purple">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gradient">
-              Veranstalter-Anmeldung
+            <h1 className="font-sans text-2xl font-bold text-text">
+              Welcome back to{" "}
+              <span className="text-gradient">The Urban Pulse</span>
             </h1>
-            <p className="mt-2 text-sm text-text-muted">
-              Melden Sie sich an, um Ihre Veranstaltungen zu verwalten
+            <p className="mt-2 font-body text-sm text-text-muted">
+              Sign in to manage your events and connect with your community
             </p>
           </div>
 
-          {error && (
-            <div className="mb-4 animate-slide-up rounded-card border-2 border-red-500/20 bg-red-500/10 px-4 py-3 shadow-soft">
-              <div className="flex items-start gap-2">
-                <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm font-medium text-red-700">{error}</p>
+          {/* Card */}
+          <div className="rounded-card bg-white p-8 shadow-soft-xl">
+            {error && (
+              <div className="mb-6 animate-slide-up rounded-card border-2 border-red-300 bg-red-50 px-4 py-3 shadow-soft">
+                <div className="flex items-start gap-2">
+                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="font-body text-sm font-medium text-red-700">{error}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-text">
-                <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                E-Mail
-              </label>
-              <input
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-                placeholder="ihre@email.de"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-text">
-                <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                Passwort
-              </label>
-              <input
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input"
-                placeholder="••••••••"
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 font-body text-sm font-semibold text-text">
+                  <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="input"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 font-body text-sm font-semibold text-text">
+                  <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Password
+                </label>
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input"
+                  placeholder="••••••••"
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="btn-primary mt-6 w-full"
-            >
-              {submitting ? (
-                <span className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  Wird angemeldet…
-                </span>
-              ) : (
-                "Anmelden"
-              )}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="btn-primary mt-2 w-full"
+              >
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    Signing in…
+                  </span>
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

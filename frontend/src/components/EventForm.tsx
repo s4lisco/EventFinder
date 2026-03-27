@@ -175,11 +175,11 @@ export default function EventForm({
         try {
             await onSubmit(values);
         } catch (err: any) {
-            setSubmitError(err.message || "Fehler beim Speichern der Veranstaltung");
+            setSubmitError(err.message || "Failed to save event");
         }
     };
 
-    const titleLabel = mode === "create" ? "Veranstaltung erstellen" : "Veranstaltung aktualisieren";
+    const titleLabel = mode === "create" ? "Create Event" : "Update Event";
 
     return (
         <form
@@ -204,7 +204,7 @@ export default function EventForm({
                     value={values.title}
                     onChange={(e) => handleChange("title", e.target.value)}
                     className="input"
-                    placeholder="Veranstaltungstitel"
+                    placeholder="Event Title"
                 />
                 {validationErrors.title && (
                     <p className="text-[11px] text-red-500">
@@ -222,7 +222,7 @@ export default function EventForm({
                     value={values.description}
                     onChange={(e) => handleChange("description", e.target.value)}
                     className="min-h-[96px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
-                    placeholder="Beschreiben Sie Ihre Veranstaltung, den Ablauf usw."
+                    placeholder="Describe your event, what to expect, etc."
                 />
                 {validationErrors.description && (
                     <p className="text-[11px] text-red-500">
@@ -309,7 +309,7 @@ export default function EventForm({
                     value={values.locationName}
                     onChange={(e) => handleChange("locationName", e.target.value)}
                     className="input"
-                    placeholder="Veranstaltungsort, Park, etc."
+                    placeholder="Venue, Park, etc."
                 />
                 {validationErrors.locationName && (
                     <p className="text-[11px] text-red-500">
@@ -404,7 +404,7 @@ export default function EventForm({
             {/* Organizer name */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Veranstaltername
+                    Organizer Name
                 </label>
                 <input
                     type="text"
@@ -487,10 +487,10 @@ export default function EventForm({
                 >
                     {submitting
                         ? mode === "create"
-                            ? "Wird erstellt…"
-                            : "Wird gespeichert…"
+                            ? "Creating…"
+                            : "Saving…"
                         : mode === "create"
-                            ? "Veranstaltung erstellen"
+                            ? "Create Event"
                             : "Änderungen speichern"}
                 </button>
             </div>

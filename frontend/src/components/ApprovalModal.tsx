@@ -23,10 +23,10 @@ export default function ApprovalModal({
   if (!open) return null;
 
   const isReject = mode === "reject";
-  const title = isReject ? "Veranstaltung ablehnen" : "Veranstaltung genehmigen";
+  const title = isReject ? "Reject Event" : "Approve Event";
   const description = isReject
-    ? `Optional können Sie einen Grund für die Ablehnung von "${eventTitle}" angeben.`
-    : `Sind Sie sicher, dass Sie "${eventTitle}" genehmigen möchten?`;
+    ? `You can optionally provide a reason for rejecting "${eventTitle}".`
+    : `Are you sure you want to approve "${eventTitle}"? It will become visible to users.`;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,13 +45,13 @@ export default function ApprovalModal({
         {isReject && (
           <div className="mt-3 space-y-1">
             <label className="text-[11px] font-medium text-text">
-              Admin-Kommentar (optional)
+              Admin Comment (optional)
             </label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="min-h-[80px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-500/10"
-              placeholder="Kurze Erklärung für den Veranstalter…"
+              className="min-h-[80px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-200 focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-500/10"
+              placeholder="Brief explanation for the organizer…"
             />
           </div>
         )}
@@ -63,12 +63,12 @@ export default function ApprovalModal({
             disabled={loading}
             className="btn-secondary text-xs"
           >
-            Abbrechen
+            Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className={`rounded-button px-4 py-2.5 text-xs font-semibold text-white shadow-soft transition-all duration-150 hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${
+            className={`rounded-button px-4 py-2.5 text-xs font-semibold text-white shadow-soft transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${
               isReject
                 ? "bg-red-600"
                 : "bg-success-600"
@@ -76,11 +76,11 @@ export default function ApprovalModal({
           >
             {loading
               ? isReject
-                ? "Wird abgelehnt…"
-                : "Wird genehmigt…"
+                ? "Rejecting…"
+                : "Approving…"
               : isReject
-              ? "Veranstaltung ablehnen"
-              : "Veranstaltung genehmigen"}
+              ? "Reject Event"
+              : "Approve Event"}
           </button>
         </div>
       </form>

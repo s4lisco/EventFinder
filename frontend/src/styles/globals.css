@@ -1,5 +1,5 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,7 +11,11 @@
   }
   
   body {
-    @apply text-text bg-white;
+    @apply text-text bg-surface font-body;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans;
   }
   
   html {
@@ -20,36 +24,40 @@
 }
 
 @layer components {
-  /* Button Styles - Regivo Design System */
+  /* Button Styles - Urban Pulse Design System */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-button bg-gradient-to-r from-primary via-secondary to-accent px-6 py-2.5 text-sm font-semibold text-white shadow-soft transition-all duration-150 hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-button bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:bg-primary-600 hover:shadow-purple active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-button border-2 border-border bg-white px-6 py-2.5 text-sm font-semibold text-text shadow-soft transition-all duration-150 hover:border-primary hover:bg-surface active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-button border-2 border-secondary bg-secondary/10 px-6 py-2.5 text-sm font-semibold text-primary shadow-soft transition-all duration-200 hover:bg-secondary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-button border-2 border-border bg-white px-6 py-2.5 text-sm font-semibold text-text shadow-soft transition-all duration-200 hover:border-primary hover:bg-surface active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-button px-6 py-2.5 text-sm font-semibold text-text transition-all duration-150 hover:bg-surface active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-button px-6 py-2.5 text-sm font-semibold text-text transition-all duration-200 hover:bg-surface active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   
-  /* Card Styles - Regivo Design System */
+  /* Card Styles - Urban Pulse Design System */
   .card {
-    @apply rounded-card bg-white shadow-soft transition-all duration-150 hover:shadow-soft-lg;
+    @apply rounded-card bg-white shadow-soft transition-all duration-200 hover:shadow-soft-lg;
   }
   
   .card-bordered {
-    @apply rounded-card border border-border bg-white shadow-soft transition-all duration-150 hover:shadow-soft-lg;
+    @apply rounded-card border border-border bg-white shadow-soft transition-all duration-200 hover:shadow-soft-lg hover:border-secondary;
   }
   
-  /* Input Styles - Regivo Design System */
+  /* Input Styles - Urban Pulse Design System */
   .input {
-    @apply w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10;
+    @apply w-full rounded-card border-2 border-border bg-white px-4 py-2.5 text-sm font-body text-text placeholder:text-text-muted transition-all duration-200 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10;
   }
   
-  /* Badge Styles - Regivo Design System */
+  /* Badge Styles - Urban Pulse Design System */
   .badge {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+    @apply inline-flex items-center rounded-pill px-3 py-1 text-xs font-semibold font-body;
   }
   
   .badge-primary {
@@ -61,20 +69,33 @@
   }
   
   .badge-warning {
-    @apply badge bg-amber-500/10 text-amber-700;
+    @apply badge bg-warning/10 text-warning-800;
   }
   
   .badge-danger {
     @apply badge bg-red-500/10 text-red-700;
   }
+
+  /* Category pill */
+  .pill-active {
+    @apply rounded-pill bg-primary px-4 py-1.5 text-sm font-semibold text-white shadow-soft transition-all duration-200;
+  }
+
+  .pill-inactive {
+    @apply rounded-pill border-2 border-border bg-white px-4 py-1.5 text-sm font-semibold text-text-muted transition-all duration-200 hover:border-secondary hover:text-primary;
+  }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }
   
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary via-secondary to-accent;
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+
+  .font-body {
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   }
 }

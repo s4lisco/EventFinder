@@ -81,30 +81,30 @@ export default function HomePage() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const handleSearchSubmit = () => {
-    // We already bind searchText to hook; this is a placeholder
-    // Could be used for geocoding locationText in future
+    // search state is already bound to hook via searchText
   };
 
   return (
     <>
       <Head>
-        <title>Veranstaltungen in Ihrer Nähe | Regivo</title>
+        <title>Discover Events Near You | The Urban Pulse</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-white">
-        <header className="border-b border-border bg-white px-4 py-4 shadow-soft lg:px-6">
+      <div className="flex min-h-screen flex-col bg-surface">
+        {/* Discovery header bar */}
+        <header className="border-b border-border bg-white px-4 py-4 shadow-soft lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-button bg-gradient-primary shadow-soft">
+            <div className="flex h-10 w-10 items-center justify-center rounded-button bg-primary shadow-purple">
               <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gradient">
-                Veranstaltungen in Ihrer Nähe
+              <h1 className="font-sans text-xl font-bold text-text">
+                Discover <span className="text-gradient">Events Near You</span>
               </h1>
-              <p className="text-sm text-text-muted">
-                Entdecken Sie tolle lokale Veranstaltungen auf der Karte
+              <p className="font-body text-sm text-text-muted">
+                Find exciting local experiences on the map
               </p>
             </div>
           </div>
@@ -122,17 +122,17 @@ export default function HomePage() {
                 />
                 <button
                   type="button"
-                  className="mt-3 btn-secondary w-full justify-between"
+                  className="mt-3 flex w-full items-center justify-between rounded-button border-2 border-border bg-white px-4 py-2.5 text-sm font-semibold text-text transition-all duration-200 hover:border-secondary"
                   onClick={() => setIsFilterOpen((v) => !v)}
                 >
-                  <span className="flex items-center gap-2">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <span className="flex items-center gap-2 font-body">
+                    <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
-                    Filter
+                    Filters
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                    {isFilterOpen ? "Ausblenden" : "Anzeigen"}
+                  <span className="font-body text-xs font-bold uppercase tracking-wider text-primary">
+                    {isFilterOpen ? "Hide" : "Show"}
                   </span>
                 </button>
                 <div className="mt-3 hidden lg:block">
@@ -156,12 +156,12 @@ export default function HomePage() {
               />
             </div>
             {/* Map/List toggle for mobile */}
-            <div className="pointer-events-none fixed bottom-6 left-0 right-0 z-30 flex justify-center lg:hidden">
-              <div className="pointer-events-auto inline-flex gap-1 rounded-full bg-text p-1.5 shadow-soft-xl backdrop-blur-xl">
+            <div className="pointer-events-none fixed bottom-20 left-0 right-0 z-30 flex justify-center lg:hidden">
+              <div className="pointer-events-auto inline-flex gap-1 rounded-pill bg-dark/95 p-1.5 shadow-soft-xl backdrop-blur-xl">
                 <button
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-150 ${
-                    viewMode === "map" 
-                      ? "bg-white text-text shadow-soft" 
+                  className={`flex items-center gap-2 rounded-pill px-4 py-2 text-sm font-semibold font-body transition-all duration-200 ${
+                    viewMode === "map"
+                      ? "bg-white text-text shadow-soft"
                       : "text-white hover:bg-white/10"
                   }`}
                   onClick={() => setViewMode("map")}
@@ -169,12 +169,12 @@ export default function HomePage() {
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
-                  Karte
+                  Map
                 </button>
                 <button
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-150 ${
-                    viewMode === "list" 
-                      ? "bg-white text-text shadow-soft" 
+                  className={`flex items-center gap-2 rounded-pill px-4 py-2 text-sm font-semibold font-body transition-all duration-200 ${
+                    viewMode === "list"
+                      ? "bg-white text-text shadow-soft"
                       : "text-white hover:bg-white/10"
                   }`}
                   onClick={() => setViewMode("list")}
@@ -182,7 +182,7 @@ export default function HomePage() {
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                   </svg>
-                  Liste
+                  List
                 </button>
               </div>
             </div>
@@ -191,11 +191,12 @@ export default function HomePage() {
           {/* Right column (list on desktop) / collapsible on mobile */}
           <aside
             className={`
-              w-full border-t border-border bg-white/80 backdrop-blur-xl lg:h-auto lg:w-[400px] lg:border-l lg:border-t-0
+              w-full border-t border-border bg-white/90 backdrop-blur-xl lg:h-auto lg:w-[400px] lg:border-l lg:border-t-0
               ${viewMode === "list" ? "block" : "hidden lg:block"}
             `}
           >
             <div className="h-full max-h-[45vh] overflow-y-auto px-4 py-4 lg:max-h-none">
+              {/* Filters on mobile */}
               <div className="mb-3 lg:hidden">
                 {isFilterOpen && (
                   <div className="mb-3 animate-slide-up">
@@ -209,38 +210,52 @@ export default function HomePage() {
                 )}
               </div>
 
+              {/* Event count header */}
+              {!loading && !error && (
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="font-body text-sm font-semibold text-text">
+                    {sortedForList.length > 0
+                      ? `${sortedForList.length} event${sortedForList.length !== 1 ? "s" : ""} found`
+                      : "No events found"}
+                  </p>
+                  {sortedForList.length > 0 && (
+                    <span className="font-body text-xs text-text-muted">Sorted by date</span>
+                  )}
+                </div>
+              )}
+
               {loading && (
-                <div className="flex items-center gap-2 py-4 text-sm text-text-muted">
+                <div className="flex items-center gap-2 py-4 font-body text-sm text-text-muted">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                  Lade Veranstaltungen…
+                  Loading events…
                 </div>
               )}
               {error && (
-                <div className="animate-slide-up rounded-card border-2 border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-700 shadow-soft">
-                  <div className="flex items-center gap-2 font-semibold">
+                <div className="animate-slide-up rounded-card border-2 border-red-300 bg-red-50 px-4 py-3 shadow-soft">
+                  <div className="flex items-center gap-2 font-sans text-sm font-semibold text-red-700">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Fehler beim Laden der Veranstaltungen
+                    Failed to load events
                   </div>
-                  <p className="mt-1 text-xs">Bitte versuchen Sie es später erneut.</p>
+                  <p className="mt-1 font-body text-xs text-red-600">Please try again later.</p>
                 </div>
               )}
               {!loading && !error && sortedForList.length === 0 && (
                 <div className="animate-slide-up rounded-card border-2 border-dashed border-border bg-surface px-4 py-8 text-center shadow-soft">
-                  <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-border">
-                    <svg className="h-6 w-6 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-secondary/20">
+                    <svg className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <p className="text-sm font-semibold text-text">Keine Veranstaltungen gefunden</p>
-                  <p className="mt-1 text-xs text-text-muted">Versuchen Sie, Ihre Filter anzupassen</p>
+                  <p className="font-sans text-sm font-semibold text-text">No events found</p>
+                  <p className="mt-1 font-body text-xs text-text-muted">Try adjusting your filters or search area</p>
                 </div>
               )}
 
               <div className="space-y-3">
                 {sortedForList.map((event, index) => (
-                  <div 
+                  <div
                     key={event.id}
                     className="animate-slide-up"
                     style={{ animationDelay: `${index * 50}ms` }}
