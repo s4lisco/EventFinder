@@ -46,9 +46,10 @@ backend/**/*.tsbuildinfo
 backend/uploads/
 
 # ─────────────────────────────────────────────
-#  Database / PostgreSQL
+#  Database
 # ─────────────────────────────────────────────
 *.sql
+!temp/seed-test-data.sql
 db-data/
 postgres-data/
 
