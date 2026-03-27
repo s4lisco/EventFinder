@@ -8,9 +8,9 @@ docker-compose down --volumes --remove-orphans
 docker-compose build --no-cache
 docker-compose up -d
 ```
-- Insert test data by running the following command in a new terminal
+- Insert test data by running the following command in a new terminal *(development only)*
 ```
-docker exec -i postgres psql -U postgres -d eventfinder < temp/seed-test-data.sql
+docker exec -i mysql mysql -u mysql -pmysql eventfinder < temp/seed-test-data.sql
 ```
 
 ## 1. Overview
@@ -111,7 +111,7 @@ A single platform where:
 |------|------------|
 | **Frontend** | Next.js, React, Tailwind CSS, Mapbox |
 | **Backend** | Node.js, NestJS, REST API |
-| **Database** | PostgreSQL + PostGIS |
+| **Database** | MySQL |
 | **Caching** | Redis |
 | **Deployment** | Docker |
 | **Monitoring** | Grafana |
@@ -131,11 +131,11 @@ A single platform where:
 ### Backend (`.env`)
 ```bash
 # Database
-DB_HOST=postgres
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=events
+DB_HOST=mysql
+DB_PORT=3306
+DB_USER=mysql
+DB_PASSWORD=mysql
+DB_NAME=eventfinder
 
 # JWT
 JWT_SECRET=your-jwt-secret

@@ -14,7 +14,6 @@ import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { FilterEventsDto } from './dto/filter-events.dto';
-import { Point } from 'typeorm';
 import { StorageService } from './storage/storage.interface';
 
 // Define Multer File type inline
@@ -57,7 +56,7 @@ export class EventService {
 
     if (filters.search) {
       qb.andWhere(
-        '(events.title ILIKE :search OR events.description ILIKE :search)',
+        '(LOWER(events.title) LIKE LOWER(:search) OR LOWER(events.description) LIKE LOWER(:search))',
         { search: `%${filters.search}%` },
       );
     }
@@ -67,13 +66,13 @@ export class EventService {
       filters.lat !== undefined &&
       filters.lon !== undefined
     ) {
-      qb.andWhere('events.location IS NOT NULL').andWhere(
+      qb.andWhere(
         `
-        ST_DWithin(
-          events.location,
-          ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography,
-          :distance
-        )
+        (6371000 * 2 * ASIN(SQRT(
+          POW(SIN((RADIANS(:lat) - RADIANS(events.latitude)) / 2), 2) +
+          COS(RADIANS(events.latitude)) * COS(RADIANS(:lat)) *
+          POW(SIN((RADIANS(:lon) - RADIANS(events.longitude)) / 2), 2)
+        ))) <= :distance
       `,
         {
           lat: filters.lat,
@@ -111,17 +110,11 @@ export class EventService {
       );
     }
 
-    const locationPoint: Point = {
-      type: 'Point',
-      coordinates: [dto.longitude, dto.latitude],
-    };
-
     const event = this.eventRepository.create({
       ...dto,
       startDate: new Date(dto.startDate),
       endDate: new Date(dto.endDate),
       organizerId,
-      location: locationPoint,
       status: EventStatus.PENDING,
     });
 
@@ -139,13 +132,6 @@ export class EventService {
       throw new ForbiddenException(
         'You are not allowed to update this event.',
       );
-    }
-
-    if (dto.latitude !== undefined && dto.longitude !== undefined) {
-      event.location = {
-        type: 'Point',
-        coordinates: [dto.longitude, dto.latitude],
-      };
     }
 
     if (dto.startDate) event.startDate = new Date(dto.startDate);

@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Point } from 'geojson'; // ✅ correct import
 import { Organizer } from '../organizer/organizer.entity';
 import { EventImage } from './entities/event-image.entity';
 
@@ -23,7 +22,6 @@ export enum EventStatus {
 @Index('IDX_event_category', ['category'])
 @Index('IDX_event_start_date', ['startDate'])
 @Index('IDX_event_status', ['status'])
-@Index('IDX_event_location_spatial', ['location'], { spatial: true })
 export class Event {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -34,10 +32,10 @@ export class Event {
   @Column({ type: 'text' })
   description!: string;
 
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'datetime' })
   startDate!: Date;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   endDate!: Date | null;
 
   @Column({ length: 100 })
@@ -53,19 +51,11 @@ export class Event {
   @Column({ length: 500 })
   address!: string;
 
-  @Column({ type: 'double precision' })
+  @Column({ type: 'double' })
   latitude!: number;
 
-  @Column({ type: 'double precision' })
+  @Column({ type: 'double' })
   longitude!: number;
-
-  @Column({
-    type: 'geography',
-    spatialFeatureType: 'Point',
-    srid: 4326,
-    nullable: true,
-  })
-  location!: Point | null;
 
   @Column({ length: 255 })
   organizerName!: string;
@@ -74,7 +64,7 @@ export class Event {
   @Column({ type: 'text', nullable: true })
   website!: string | null;
 
-  @Column({ type: 'text', array: true, nullable: true })
+  @Column({ type: 'json', nullable: true })
   images!: string[] | null;
 
   @Column({
@@ -88,7 +78,7 @@ export class Event {
   @Column({ type: 'text', nullable: true })
   adminComment!: string | null;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'varchar', length: 36, nullable: true })
   organizerId!: string | null;
 
   @ManyToOne(() => Organizer, (organizer) => organizer.events, {
@@ -99,9 +89,9 @@ export class Event {
   @OneToMany(() => EventImage, (eventImage) => eventImage.event)
   eventImages!: EventImage[];
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'datetime' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz' })
+  @UpdateDateColumn({ type: 'datetime' })
   updatedAt!: Date;
 }

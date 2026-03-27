@@ -13,7 +13,7 @@ export class EventImage {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'varchar', length: 36 })
   eventId!: string;
 
   @ManyToOne(() => Event, (event) => event.eventImages, {
@@ -31,6 +31,6 @@ export class EventImage {
   @Column({ type: 'int', default: 0 })
   position!: number;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'datetime' })
   createdAt!: Date;
 }
