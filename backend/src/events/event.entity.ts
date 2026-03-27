@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Point } from 'geojson'; // ✅ correct import
 import { Organizer } from '../organizer/organizer.entity';
 import { EventImage } from './entities/event-image.entity';
 
@@ -57,12 +56,6 @@ export class Event {
 
   @Column({ type: 'double' })
   longitude!: number;
-
-  @Column({
-    type: 'point',
-    nullable: true,
-  })
-  location!: Point | null;
 
   @Column({ length: 255 })
   organizerName!: string;

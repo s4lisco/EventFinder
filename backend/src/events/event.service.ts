@@ -14,7 +14,6 @@ import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { FilterEventsDto } from './dto/filter-events.dto';
-import { Point } from 'typeorm';
 import { StorageService } from './storage/storage.interface';
 
 // Define Multer File type inline
@@ -111,17 +110,11 @@ export class EventService {
       );
     }
 
-    const locationPoint: Point = {
-      type: 'Point',
-      coordinates: [dto.longitude, dto.latitude],
-    };
-
     const event = this.eventRepository.create({
       ...dto,
       startDate: new Date(dto.startDate),
       endDate: new Date(dto.endDate),
       organizerId,
-      location: locationPoint,
       status: EventStatus.PENDING,
     });
 
@@ -139,13 +132,6 @@ export class EventService {
       throw new ForbiddenException(
         'You are not allowed to update this event.',
       );
-    }
-
-    if (dto.latitude !== undefined && dto.longitude !== undefined) {
-      event.location = {
-        type: 'Point',
-        coordinates: [dto.longitude, dto.latitude],
-      };
     }
 
     if (dto.startDate) event.startDate = new Date(dto.startDate);

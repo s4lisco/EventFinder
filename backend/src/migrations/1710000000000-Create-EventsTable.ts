@@ -17,7 +17,6 @@ export class CreateEventsTable1710000000000 implements MigrationInterface {
         \`address\` varchar(500) NOT NULL,
         \`latitude\` double NOT NULL,
         \`longitude\` double NOT NULL,
-        \`location\` point NULL,
         \`organizerName\` varchar(255) NOT NULL,
         \`website\` text NULL,
         \`images\` json NULL,
