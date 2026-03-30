@@ -1,5 +1,6 @@
 // frontend/src/components/SearchBar.tsx
 import { FormEvent } from "react";
+import { useTranslations } from "@/utils/i18n";
 
 interface SearchBarProps {
   searchText: string;
@@ -12,6 +13,8 @@ export default function SearchBar({
   onSearchTextChange,
   onSubmit,
 }: SearchBarProps) {
+  const t = useTranslations();
+  
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit();
@@ -32,7 +35,7 @@ export default function SearchBar({
           type="text"
           value={searchText}
           onChange={(e) => onSearchTextChange(e.target.value)}
-          placeholder="Suche nach Veranstaltungen..."
+          placeholder={t('search.placeholder')}
           className="w-full border-none bg-transparent text-sm font-medium text-text placeholder:text-text-muted focus:outline-none"
         />
         {searchText && (

@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "overview": "Übersicht",
+    "management": "Verwaltung",
+    "organizer": "Veranstalter",
+    "logout": "Abmelden"
+  },
+  "home": {
+    "title": "Veranstaltungen in Ihrer Nähe",
+    "subtitle": "Entdecken Sie tolle lokale Veranstaltungen auf der Karte"
+  },
+  "search": {
+    "placeholder": "Suche nach Veranstaltungen..."
+  },
+  "filter": {
+    "category": "Kategorie",
+    "radius": "Umkreis",
+    "filter": "Filter",
+    "show": "Anzeigen",
+    "hide": "Ausblenden"
+  },
+  "categories": {
+    "all": "Alle Kategorien",
+    "music": "Musik",
+    "sports": "Sport",
+    "family": "Familie",
+    "arts": "Kunst & Kultur",
+    "food": "Essen & Trinken"
+  },
+  "view": {
+    "map": "Karte",
+    "list": "Liste"
+  },
+  "loading": {
+    "events": "Lade Veranstaltungen…"
+  },
+  "error": {
+    "loadingEvents": "Fehler beim Laden der Veranstaltungen",
+    "tryAgainLater": "Bitte versuchen Sie es später erneut."
+  },
+  "empty": {
+    "noEvents": "Keine Veranstaltungen gefunden",
+    "adjustFilters": "Versuchen Sie, Ihre Filter anzupassen"
+  },
+  "language": {
+    "de": "Deutsch",
+    "gsw-CH": "Schwizerdütsch"
+  }
+}

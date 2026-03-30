@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "overview": "Übersicht",
+    "management": "Verwaltig",
+    "organizer": "Verastalter",
+    "logout": "Abmelde"
+  },
+  "home": {
+    "title": "Verastaltige i de Nöchi",
+    "subtitle": "Entdecke tolli lokali Verastaltige uf de Chartä"
+  },
+  "search": {
+    "placeholder": "Suech nach Verastaltige..."
+  },
+  "filter": {
+    "category": "Kategoriä",
+    "radius": "Umchreis",
+    "filter": "Filter",
+    "show": "Azeige",
+    "hide": "Uusblende"
+  },
+  "categories": {
+    "all": "Alli Kategoriä",
+    "music": "Musig",
+    "sports": "Sport",
+    "family": "Familie",
+    "arts": "Kunst & Kultur",
+    "food": "Ässe & Trinke"
+  },
+  "view": {
+    "map": "Chartä",
+    "list": "Lischtä"
+  },
+  "loading": {
+    "events": "Lade Verastaltige…"
+  },
+  "error": {
+    "loadingEvents": "Fähler bim Lade vo de Verastaltige",
+    "tryAgainLater": "Bitte probier's spöter nomal."
+  },
+  "empty": {
+    "noEvents": "Kei Verastaltige gfunde",
+    "adjustFilters": "Probier dini Filter azpasse"
+  },
+  "language": {
+    "de": "Deutsch",
+    "gsw-CH": "Schwizerdütsch"
+  }
+}

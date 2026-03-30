@@ -1,4 +1,6 @@
 // frontend/src/components/FilterPanel.tsx
+import { useTranslations } from "@/utils/i18n";
+
 interface FilterPanelProps {
   category?: string;
   onCategoryChange: (value?: string) => void;
@@ -6,21 +8,23 @@ interface FilterPanelProps {
   onDistanceKmChange: (value: number) => void;
 }
 
-const CATEGORY_OPTIONS = [
-  { value: "", label: "Alle Kategorien", icon: "🎯" },
-  { value: "music", label: "Musik", icon: "🎵" },
-  { value: "sports", label: "Sport", icon: "⚽" },
-  { value: "family", label: "Familie", icon: "👨‍👩‍👧" },
-  { value: "arts", label: "Kunst & Kultur", icon: "🎨" },
-  { value: "food", label: "Essen & Trinken", icon: "🍴" },
-];
-
 export default function FilterPanel({
   category,
   onCategoryChange,
   distanceKm,
   onDistanceKmChange,
 }: FilterPanelProps) {
+  const t = useTranslations();
+
+  const CATEGORY_OPTIONS = [
+    { value: "", label: t('categories.all'), icon: "🎯" },
+    { value: "music", label: t('categories.music'), icon: "🎵" },
+    { value: "sports", label: t('categories.sports'), icon: "⚽" },
+    { value: "family", label: t('categories.family'), icon: "👨‍👩‍👧" },
+    { value: "arts", label: t('categories.arts'), icon: "🎨" },
+    { value: "food", label: t('categories.food'), icon: "🍴" },
+  ];
+
   return (
     <div className="space-y-4 rounded-card bg-surface p-4 shadow-soft">
       <div className="flex flex-col gap-2">
@@ -28,7 +32,7 @@ export default function FilterPanel({
           <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </svg>
-          Category
+          {t('filter.category')}
         </label>
         <select
           className="input cursor-pointer text-sm font-medium"
@@ -51,7 +55,7 @@ export default function FilterPanel({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          Umkreis
+          {t('filter.radius')}
         </label>
         <div className="relative">
           <input
