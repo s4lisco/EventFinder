@@ -39,12 +39,12 @@ interface ValidationErrors {
 }
 
 const CATEGORY_OPTIONS = [
-    {value: "", label: "Kategorie wählen"},
-    {value: "music", label: "Musik"},
-    {value: "sports", label: "Sport"},
-    {value: "family", label: "Familie"},
-    {value: "arts", label: "Kunst & Kultur"},
-    {value: "food", label: "Essen & Trinken"},
+    {value: "", label: "Select a category"},
+    {value: "music", label: "Music"},
+    {value: "sports", label: "Sports"},
+    {value: "family", label: "Family"},
+    {value: "arts", label: "Arts & Culture"},
+    {value: "food", label: "Food & Drink"},
 ];
 
 export default function EventForm({
@@ -108,7 +108,7 @@ export default function EventForm({
 
     const geocodeAddress = async () => {
         if (!values.address.trim()) {
-            alert("Bitte geben Sie eine Adresse ein.");
+            alert("Please enter an address.");
             return;
         }
 
@@ -124,10 +124,10 @@ export default function EventForm({
                 handleChange("latitude", lat);
                 handleChange("longitude", lon);
             } else {
-                alert("Adresse nicht gefunden. Bitte versuchen Sie eine andere Adresse.");
+                alert("Address not found. Please try a different address.");
             }
         } catch {
-            alert("Fehler bei der Adressgeokodierung. Bitte versuchen Sie es später erneut.");
+            alert("Geocoding error. Please try again later.");
         } finally {
             setGeocodingLoading(false);
         }
@@ -136,16 +136,16 @@ export default function EventForm({
     const validate = (): boolean => {
         const errors: ValidationErrors = {};
 
-        if (!values.title.trim()) errors.title = "Titel ist erforderlich";
+        if (!values.title.trim()) errors.title = "Title is required";
         if (!values.description.trim())
-            errors.description = "Beschreibung ist erforderlich";
-        if (!values.startDate) errors.startDate = "Startdatum und -uhrzeit sind erforderlich";
-        if (!values.category) errors.category = "Kategorie ist erforderlich";
+            errors.description = "Description is required";
+        if (!values.startDate) errors.startDate = "Start date and time are required";
+        if (!values.category) errors.category = "Category is required";
         if (!values.locationName.trim())
-            errors.locationName = "Ortsname ist erforderlich";
-        if (!values.address.trim()) errors.address = "Adresse ist erforderlich";
-        if (!values.latitude) errors.latitude = "Breitengrad ist erforderlich";
-        if (!values.longitude) errors.longitude = "Längengrad ist erforderlich";
+            errors.locationName = "Location name is required";
+        if (!values.address.trim()) errors.address = "Address is required";
+        if (!values.latitude) errors.latitude = "Latitude is required";
+        if (!values.longitude) errors.longitude = "Longitude is required";
 
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
@@ -153,7 +153,7 @@ export default function EventForm({
 
     const handleUseMyLocation = () => {
         if (!navigator.geolocation) {
-            alert("Geolokalisierung wird von diesem Browser nicht unterstützt.");
+            alert("Geolocation is not supported by this browser.");
             return;
         }
         navigator.geolocation.getCurrentPosition(
@@ -162,7 +162,7 @@ export default function EventForm({
                 handleChange("longitude", String(pos.coords.longitude));
             },
             () => {
-                alert("Ihr Standort konnte nicht ermittelt werden.");
+                alert("Unable to determine your location.");
             },
         );
     };
@@ -175,11 +175,11 @@ export default function EventForm({
         try {
             await onSubmit(values);
         } catch (err: any) {
-            setSubmitError(err.message || "Fehler beim Speichern der Veranstaltung");
+            setSubmitError(err.message || "Failed to save event");
         }
     };
 
-    const titleLabel = mode === "create" ? "Veranstaltung erstellen" : "Veranstaltung aktualisieren";
+    const titleLabel = mode === "create" ? "Create Event" : "Update Event";
 
     return (
         <form
@@ -197,14 +197,14 @@ export default function EventForm({
             {/* Title */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Titel <span className="text-red-500">*</span>
+                    Title <span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
                     value={values.title}
                     onChange={(e) => handleChange("title", e.target.value)}
                     className="input"
-                    placeholder="Veranstaltungstitel"
+                    placeholder="Event Title"
                 />
                 {validationErrors.title && (
                     <p className="text-[11px] text-red-500">
@@ -216,13 +216,13 @@ export default function EventForm({
             {/* Description */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Beschreibung <span className="text-red-500">*</span>
+                    Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                     value={values.description}
                     onChange={(e) => handleChange("description", e.target.value)}
                     className="min-h-[96px] w-full rounded-card border-2 border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-muted transition-all duration-150 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
-                    placeholder="Beschreiben Sie Ihre Veranstaltung, den Ablauf usw."
+                    placeholder="Describe your event, what to expect, etc."
                 />
                 {validationErrors.description && (
                     <p className="text-[11px] text-red-500">
@@ -235,7 +235,7 @@ export default function EventForm({
             <div className="grid gap-3 md:grid-cols-2">
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-text">
-                        Startdatum &amp; -uhrzeit <span className="text-red-500">*</span>
+                        Start Date &amp; Time <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="datetime-local"
@@ -251,7 +251,7 @@ export default function EventForm({
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-text">
-                        Enddatum &amp; -uhrzeit
+                        End Date &amp; Time
                     </label>
                     <input
                         type="datetime-local"
@@ -266,7 +266,7 @@ export default function EventForm({
             <div className="grid gap-3 md:grid-cols-2">
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-text">
-                        Kategorie <span className="text-red-500">*</span>
+                        Category <span className="text-red-500">*</span>
                     </label>
                     <select
                         value={values.category}
@@ -287,14 +287,14 @@ export default function EventForm({
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-text">
-                        Preisinformation
+                        Price Info
                     </label>
                     <input
                         type="text"
                         value={values.priceInfo}
                         onChange={(e) => handleChange("priceInfo", e.target.value)}
                         className="input"
-                        placeholder="z.B. Kostenlos, 15€ Eintritt, etc."
+                        placeholder="e.g. Free, $15 entry, etc."
                     />
                 </div>
             </div>
@@ -302,14 +302,14 @@ export default function EventForm({
             {/* Location */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Ortsname <span className="text-red-500">*</span>
+                    Location Name <span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
                     value={values.locationName}
                     onChange={(e) => handleChange("locationName", e.target.value)}
                     className="input"
-                    placeholder="Veranstaltungsort, Park, etc."
+                    placeholder="Venue, Park, etc."
                 />
                 {validationErrors.locationName && (
                     <p className="text-[11px] text-red-500">
@@ -320,7 +320,7 @@ export default function EventForm({
 
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Adresse <span className="text-red-500">*</span>
+                    Address <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
                     <input
@@ -328,7 +328,7 @@ export default function EventForm({
                         value={values.address}
                         onChange={(e) => handleChange("address", e.target.value)}
                         className="input flex-1"
-                        placeholder="Straße, Hausnummer, Stadt"
+                        placeholder="Street, number, city"
                     />
                     <button
                         type="button"
@@ -336,7 +336,7 @@ export default function EventForm({
                         disabled={geocodingLoading}
                         className="btn-primary px-4 py-2"
                     >
-                        {geocodingLoading ? "…" : "Suchen"}
+                        {geocodingLoading ? "…" : "Lookup"}
                     </button>
                 </div>
                 {validationErrors.address && (
@@ -350,20 +350,20 @@ export default function EventForm({
             <div className="space-y-1 rounded-card bg-surface p-3">
                 <div className="flex items-center justify-between">
                     <p className="text-xs font-medium text-text">
-                        Koordinaten (automatisch ausgefüllt)
+                        Coordinates (auto-filled from address)
                     </p>
                     <button
                         type="button"
                         onClick={handleUseMyLocation}
                         className="text-[11px] font-medium text-primary hover:opacity-80"
                     >
-                        Meinen Standort verwenden
+                        Use my location
                     </button>
                 </div>
                 <div className="mt-2 grid gap-3 md:grid-cols-2">
                     <div className="space-y-1">
                         <label className="text-[11px] text-text-muted">
-                            Breitengrad <span className="text-red-500">*</span>
+                            Latitude <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
@@ -380,7 +380,7 @@ export default function EventForm({
                     </div>
                     <div className="space-y-1">
                         <label className="text-[11px] text-text-muted">
-                            Längengrad <span className="text-red-500">*</span>
+                            Longitude <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
@@ -397,35 +397,35 @@ export default function EventForm({
                     </div>
                 </div>
                 <p className="mt-1 text-[11px] text-text-muted">
-                    Koordinaten werden automatisch aus der Adresse gefüllt oder können manuell angepasst werden.
+                    Coordinates are auto-filled from the address or can be adjusted manually.
                 </p>
             </div>
 
             {/* Organizer name */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Veranstaltername
+                    Organizer Name
                 </label>
                 <input
                     type="text"
                     value={values.organizerName}
                     onChange={(e) => handleChange("organizerName", e.target.value)}
                     className="input"
-                    placeholder="Ihr Name oder Organisation"
+                    placeholder="Your name or organization"
                 />
             </div>
 
             {/* Website */}
             <div className="space-y-1">
                 <label className="text-xs font-medium text-text">
-                    Webseite (optional)
+                    Website (optional)
                 </label>
                 <input
                     type="url"
                     value={values.website}
                     onChange={(e) => handleChange("website", e.target.value)}
                     className="input"
-                    placeholder="https://beispiel.de"
+                    placeholder="https://example.com"
                 />
             </div>
 
@@ -441,10 +441,10 @@ export default function EventForm({
             ) : (
                 <div className="space-y-1">
                     <label className="text-xs font-medium text-text">
-                        Bild-URLs (optional)
+                        Image URLs (optional)
                     </label>
                     <p className="text-[11px] text-text-muted">
-                        Fügen Sie Links zu Bildern ein. Das erste Bild wird als Hauptbild verwendet.
+                        Add links to images. The first image will be used as the cover.
                     </p>
                     <div className="space-y-2">
                         {values.images.map((img, index) => (
@@ -473,7 +473,7 @@ export default function EventForm({
                         onClick={handleAddImageField}
                         className="mt-1 text-[11px] font-medium text-primary hover:opacity-80"
                     >
-                        + Weiteres Bild hinzufügen
+                        + Add another image
                     </button>
                 </div>
             )}
@@ -487,11 +487,11 @@ export default function EventForm({
                 >
                     {submitting
                         ? mode === "create"
-                            ? "Wird erstellt…"
-                            : "Wird gespeichert…"
+                            ? "Creating…"
+                            : "Saving…"
                         : mode === "create"
-                            ? "Veranstaltung erstellen"
-                            : "Änderungen speichern"}
+                            ? "Create Event"
+                            : "Save Changes"}
                 </button>
             </div>
         </form>

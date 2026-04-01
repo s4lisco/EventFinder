@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import OrganizerEventCard from "@/components/OrganizerEventCard";
-import StatusBadge from "@/components/StatusBadge";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useOrganizerEvents } from "@/hooks/useOrganizerEvents";
 import { useDeleteEvent } from "@/hooks/useDeleteEvent";
@@ -22,7 +21,6 @@ export default function OrganizerDashboardPage() {
       if (payload?.sub && payload.role === "organizer") {
         setOrganizerId(payload.sub);
       } else {
-        // not an organizer, redirect to login or home
         router.replace("/organizers/login");
       }
     }
@@ -59,7 +57,7 @@ export default function OrganizerDashboardPage() {
 
   if (!checked) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500">
+      <div className="flex min-h-screen items-center justify-center bg-surface font-body text-sm text-text-muted">
         Checking authentication…
       </div>
     );
@@ -69,37 +67,62 @@ export default function OrganizerDashboardPage() {
     return null;
   }
 
+  const approved = events.filter((e) => e.status === "approved").length;
+  const pending = events.filter((e) => e.status === "pending").length;
+  const rejected = events.filter((e) => e.status === "rejected").length;
+
   return (
     <>
       <Head>
-        <title>Organizer Dashboard | EventFinder</title>
+        <title>Organizer Dashboard | The Urban Pulse</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-gradient-subtle">
-        <header className="border-b border-slate-200/50 bg-white/80 px-4 py-4 shadow-soft backdrop-blur-xl lg:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-soft">
-              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
+      <div className="flex min-h-screen flex-col bg-surface">
+        {/* Dashboard header */}
+        <header className="border-b border-border bg-white px-4 py-5 shadow-soft lg:px-8">
+          <div className="mx-auto flex max-w-4xl items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gradient">
-                Your Events
+              <h1 className="font-sans text-xl font-bold text-text">
+                Your <span className="text-gradient">Events</span>
               </h1>
-              <p className="text-sm text-slate-600">
+              <p className="font-body text-sm text-text-muted">
                 Manage and track your event submissions
               </p>
             </div>
+            <Link
+              href="/organizers/events/create"
+              className="btn-primary hidden items-center gap-2 sm:inline-flex"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              New Event
+            </Link>
           </div>
         </header>
 
-        <main className="flex-1">
-          <div className="mx-auto max-w-4xl px-4 py-6 lg:px-6">
+        <main className="flex-1 pb-24">
+          <div className="mx-auto max-w-4xl px-4 py-6 lg:px-8">
+            {/* Stats grid */}
+            <div className="mb-6 grid grid-cols-3 gap-3">
+              <div className="rounded-card border border-border bg-white p-4 shadow-soft">
+                <p className="font-body text-xs font-medium text-text-muted">Total</p>
+                <p className="font-sans text-2xl font-bold text-text">{events.length}</p>
+              </div>
+              <div className="rounded-card border border-border bg-white p-4 shadow-soft">
+                <p className="font-body text-xs font-medium text-success-700">Approved</p>
+                <p className="font-sans text-2xl font-bold text-success-700">{approved}</p>
+              </div>
+              <div className="rounded-card border border-border bg-white p-4 shadow-soft">
+                <p className="font-body text-xs font-medium text-warning-700">Pending</p>
+                <p className="font-sans text-2xl font-bold text-warning-700">{pending}</p>
+              </div>
+            </div>
+
             {/* Toast / messages */}
             {toast && (
-              <div className="mb-4 animate-slide-up rounded-xl border-2 border-success-200 bg-success-50 px-4 py-3 shadow-soft">
-                <div className="flex items-center gap-2 font-semibold text-success-800">
-                  <svg className="h-5 w-5 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="mb-4 animate-slide-up rounded-card border-2 border-success-500/30 bg-success-50 px-4 py-3 shadow-soft">
+                <div className="flex items-center gap-2 font-body font-semibold text-success-700">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {toast}
@@ -107,51 +130,25 @@ export default function OrganizerDashboardPage() {
               </div>
             )}
             {eventsError && (
-              <div className="mb-4 animate-slide-up rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 shadow-soft">
-                <div className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="font-semibold text-red-900">Failed to load events</p>
-                    <p className="text-sm text-red-700">{eventsError}</p>
-                  </div>
-                </div>
+              <div className="mb-4 animate-slide-up rounded-card border-2 border-red-300 bg-red-50 px-4 py-3 shadow-soft">
+                <p className="font-body font-semibold text-red-700">Failed to load events</p>
+                <p className="font-body text-sm text-red-600">{eventsError}</p>
               </div>
             )}
             {deleteError && (
-              <div className="mb-4 animate-slide-up rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 shadow-soft">
-                <div className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="font-semibold text-red-900">Failed to delete event</p>
-                    <p className="text-sm text-red-700">{deleteError}</p>
-                  </div>
-                </div>
+              <div className="mb-4 animate-slide-up rounded-card border-2 border-red-300 bg-red-50 px-4 py-3 shadow-soft">
+                <p className="font-body font-semibold text-red-700">Failed to delete event</p>
+                <p className="font-body text-sm text-red-600">{deleteError}</p>
               </div>
             )}
 
-            {/* Header actions */}
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3 text-sm">
-                {loadingEvents ? (
-                  <div className="flex items-center gap-2 text-slate-500">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-500 border-t-transparent"></div>
-                    Loading your events…
-                  </div>
-                ) : (
-                  <div className="rounded-xl bg-gradient-to-r from-primary-50 to-accent-50 px-4 py-2 font-semibold text-primary-700 shadow-soft">
-                    {events.length} Event{events.length === 1 ? "" : "s"}
-                  </div>
-                )}
-              </div>
+            {/* Mobile create button */}
+            <div className="mb-4 sm:hidden">
               <Link
                 href="/organizers/events/create"
-                className="btn-primary flex items-center justify-center gap-2"
+                className="btn-primary flex w-full items-center justify-center gap-2"
               >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 Create New Event
@@ -163,26 +160,26 @@ export default function OrganizerDashboardPage() {
               {loadingEvents && !events.length && (
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
-                    <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600"></div>
-                    <p className="text-sm font-medium text-slate-600">Loading events…</p>
+                    <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-secondary border-t-primary"></div>
+                    <p className="font-body text-sm font-medium text-text-muted">Loading events…</p>
                   </div>
                 </div>
               )}
 
               {!loadingEvents && events.length === 0 && (
-                <div className="animate-slide-up rounded-2xl border-2 border-dashed border-slate-200 bg-white p-8 text-center shadow-soft">
-                  <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100">
-                    <svg className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="animate-slide-up rounded-card border-2 border-dashed border-border bg-white px-6 py-12 text-center shadow-soft">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary/20">
+                    <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <p className="text-lg font-bold text-slate-900">No events yet</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Start by creating your first event
+                  <p className="font-sans text-lg font-bold text-text">No events yet</p>
+                  <p className="mt-1 font-body text-sm text-text-muted">
+                    Start by creating your first event to connect with your community
                   </p>
                   <Link
                     href="/organizers/events/create"
-                    className="btn-primary mt-4 inline-flex"
+                    className="btn-primary mt-6 inline-flex"
                   >
                     Create Your First Event
                   </Link>
@@ -190,7 +187,7 @@ export default function OrganizerDashboardPage() {
               )}
 
               {events.map((event, index) => (
-                <div 
+                <div
                   key={event.id}
                   className="animate-slide-up"
                   style={{ animationDelay: `${index * 50}ms` }}

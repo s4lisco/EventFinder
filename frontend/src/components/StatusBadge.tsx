@@ -10,19 +10,19 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
       : "pending";
 
   const labelMap = {
-    approved: "Genehmigt",
-    rejected: "Abgelehnt",
-    pending: "Ausstehend"
+    approved: "Approved",
+    rejected: "Rejected",
+    pending: "Pending"
   };
   
   const label = labelMap[normalized];
 
   const colorClasses =
     normalized === "approved"
-      ? "badge-success"
+      ? "bg-success-500/10 text-success-700"
       : normalized === "rejected"
-      ? "badge-danger"
-      : "badge-warning";
+      ? "bg-red-500/10 text-red-700"
+      : "bg-warning/10 text-warning-800";
 
   const icon =
     normalized === "approved" ? (
@@ -41,7 +41,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${colorClasses}`}
+      className={`inline-flex items-center gap-1 rounded-pill px-3 py-1 font-body text-xs font-semibold ${colorClasses}`}
     >
       {icon}
       {label}

@@ -61,49 +61,47 @@ export default function EventDetailPage() {
     }
   };
 
-  const pageTitle = event ? `${event.title} | Regional Events` : "Event";
+  const pageTitle = event ? `${event.title} | The Urban Pulse` : "Event | The Urban Pulse";
 
   return (
     <>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <div className="flex min-h-screen flex-col bg-gradient-subtle">
-        <header className="border-b border-slate-200/50 bg-white/80 px-4 py-4 shadow-soft backdrop-blur-xl">
+      <div className="flex min-h-screen flex-col bg-surface">
+        {/* Back navigation */}
+        <div className="border-b border-border bg-white/80 px-4 py-3 shadow-soft backdrop-blur-xl lg:px-8">
           <button
             onClick={() => router.back()}
-            className="mb-2 flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-primary-600"
+            className="flex items-center gap-1.5 font-body text-sm font-semibold text-text-muted transition-colors duration-200 hover:text-primary"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back
+            Back to Discovery
           </button>
-          <h1 className="text-xl font-bold text-slate-900">
-            {event?.title ?? "Event Details"}
-          </h1>
-        </header>
+        </div>
 
-        <main className="flex-1 pb-24">
+        <main className="flex-1 pb-28">
           {loading && (
-            <div className="flex items-center justify-center px-4 py-12">
+            <div className="flex items-center justify-center px-4 py-16">
               <div className="text-center">
-                <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600"></div>
-                <p className="text-sm font-medium text-slate-600">Loading event details…</p>
+                <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-secondary border-t-primary"></div>
+                <p className="font-body text-sm font-medium text-text-muted">Loading event details…</p>
               </div>
             </div>
           )}
 
           {error && !loading && (
             <div className="mx-auto max-w-md px-4 py-12">
-              <div className="animate-slide-up rounded-2xl border-2 border-red-200 bg-red-50 px-6 py-8 text-center shadow-soft">
+              <div className="animate-slide-up rounded-card border-2 border-red-200 bg-red-50 px-6 py-8 text-center shadow-soft">
                 <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
                   <svg className="h-7 w-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="font-semibold text-red-900">Failed to load event</p>
-                <p className="mt-1 text-sm text-red-700">
+                <p className="font-sans font-semibold text-red-900">Failed to load event</p>
+                <p className="mt-1 font-body text-sm text-red-700">
                   The event may not exist or is currently unavailable.
                 </p>
               </div>
@@ -112,14 +110,14 @@ export default function EventDetailPage() {
 
           {!loading && !error && event && !isApproved && (
             <div className="mx-auto max-w-md px-4 py-12">
-              <div className="animate-slide-up rounded-2xl border-2 border-slate-200 bg-slate-50 px-6 py-8 text-center shadow-soft">
-                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-                  <svg className="h-7 w-7 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="animate-slide-up rounded-card border-2 border-border bg-white px-6 py-8 text-center shadow-soft">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-secondary/20">
+                  <svg className="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
-                <p className="font-semibold text-slate-900">Event Not Available</p>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="font-sans font-semibold text-text">Event Not Available</p>
+                <p className="mt-1 font-body text-sm text-text-muted">
                   This event is pending approval or has been removed.
                 </p>
               </div>
@@ -127,72 +125,82 @@ export default function EventDetailPage() {
           )}
 
           {!loading && !error && event && isApproved && (
-            <div className="mx-auto max-w-4xl px-4 py-6 animate-fade-in">
+            <div className="mx-auto max-w-4xl px-4 py-6 animate-fade-in lg:px-8">
               {/* Image gallery */}
-              <section className="mb-6">
+              <section className="mb-6 overflow-hidden rounded-card shadow-soft">
                 <EventImageGallery
                   title={event.title}
                   images={event.images || []}
                 />
               </section>
 
-              {/* Main info */}
-              <section className="mb-6 space-y-4 card p-6">
+              {/* Title & category */}
+              <section className="mb-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-slate-900 lg:text-3xl">
+                    <h1 className="font-sans text-2xl font-bold text-text lg:text-3xl">
                       {event.title}
-                    </h2>
-                    <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                      <svg className="h-4 w-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    </h1>
+                    <div className="mt-2 flex items-center gap-2 font-body text-sm text-text-muted">
+                      <svg className="h-4 w-4 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <span className="font-medium">{dateRange}</span>
                     </div>
                   </div>
-                  <span className="badge-primary text-sm uppercase tracking-wider">
+                  <span className="rounded-pill bg-primary/10 px-3 py-1 font-body text-sm font-semibold uppercase tracking-wider text-primary">
                     {event.category}
                   </span>
                 </div>
+              </section>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100/50 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-primary-900">
-                      <svg className="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {/* Info grid */}
+              <section className="mb-6 grid gap-4 sm:grid-cols-2">
+                {/* Location */}
+                <div className="rounded-card border border-border bg-white p-4 shadow-soft">
+                  <div className="mb-2 flex items-center gap-2 font-sans text-sm font-bold text-text">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-button bg-primary/10">
+                      <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      Location
                     </div>
-                    <p className="font-medium text-slate-900">{event.locationName}</p>
-                    <p className="text-sm text-slate-600">{event.address}</p>
+                    Location
                   </div>
-
-                  <div className="space-y-2 rounded-xl bg-gradient-to-br from-success-50 to-success-100/50 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-success-900">
-                      <svg className="h-5 w-5 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Price
-                    </div>
-                    <p className="font-semibold text-slate-900">{event.priceInfo || "Free entry"}</p>
-                  </div>
+                  <p className="font-body font-medium text-text">{event.locationName}</p>
+                  <p className="font-body text-sm text-text-muted">{event.address}</p>
                 </div>
 
-                <div className="space-y-2 rounded-xl bg-gradient-to-br from-accent-50 to-accent-100/50 p-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-accent-900">
-                    <svg className="h-5 w-5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+                {/* Price */}
+                <div className="rounded-card border border-border bg-white p-4 shadow-soft">
+                  <div className="mb-2 flex items-center gap-2 font-sans text-sm font-bold text-text">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-button bg-success-500/10">
+                      <svg className="h-4 w-4 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    Price
+                  </div>
+                  <p className="font-body font-semibold text-text">{event.priceInfo || "Free entry"}</p>
+                </div>
+
+                {/* Organizer */}
+                <div className="rounded-card border border-border bg-white p-4 shadow-soft sm:col-span-2">
+                  <div className="mb-2 flex items-center gap-2 font-sans text-sm font-bold text-text">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-button bg-secondary/20">
+                      <svg className="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
                     Organizer
                   </div>
-                  <p className="font-medium text-slate-900">{event.organizerName}</p>
+                  <p className="font-body font-medium text-text">{event.organizerName}</p>
                   {event.website && (
                     <a
                       href={event.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm font-semibold text-accent-600 transition-colors duration-200 hover:text-accent-700"
+                      className="mt-1 inline-flex items-center gap-1 font-body text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary-600"
                     >
                       Visit website
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,33 +212,33 @@ export default function EventDetailPage() {
               </section>
 
               {/* Description */}
-              <section className="mb-6 card p-6">
-                <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-slate-900">
-                  <svg className="h-5 w-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <section className="mb-6 rounded-card border border-border bg-white p-6 shadow-soft">
+                <h2 className="mb-3 flex items-center gap-2 font-sans text-lg font-bold text-text">
+                  <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   About This Event
-                </h3>
-                <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">
+                </h2>
+                <p className="whitespace-pre-line font-body text-sm leading-relaxed text-text-muted">
                   {event.description}
                 </p>
               </section>
 
               {/* Map */}
-              <section className="card p-6">
-                <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-slate-900">
-                  <svg className="h-5 w-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <section className="rounded-card border border-border bg-white p-6 shadow-soft">
+                <h2 className="mb-3 flex items-center gap-2 font-sans text-lg font-bold text-text">
+                  <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
                   Location on Map
-                </h3>
+                </h2>
                 <MapMiniView
                   latitude={event.latitude}
                   longitude={event.longitude}
                   title={event.title}
                   locationName={event.locationName}
                 />
-                <p className="mt-3 text-xs text-slate-500">
+                <p className="mt-3 font-body text-xs text-text-muted">
                   Tap on the map to zoom in and explore the nearby area
                 </p>
               </section>
@@ -238,9 +246,9 @@ export default function EventDetailPage() {
           )}
         </main>
 
-        {/* Footer actions */}
+        {/* Sticky CTA footer */}
         {event && isApproved && (
-          <footer className="fixed bottom-0 left-0 right-0 border-t border-slate-200/50 bg-white/95 px-4 py-4 shadow-soft-xl backdrop-blur-xl">
+          <footer className="fixed bottom-0 left-0 right-0 border-t border-border bg-white/95 px-4 py-4 shadow-soft-xl backdrop-blur-xl">
             <div className="mx-auto flex max-w-4xl gap-3">
               <button
                 onClick={handleOpenInMaps}
@@ -250,7 +258,7 @@ export default function EventDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span>Open in Maps</span>
+                <span>Directions</span>
               </button>
               <button
                 onClick={handleShare}
