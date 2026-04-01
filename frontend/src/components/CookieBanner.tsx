@@ -7,12 +7,10 @@ export default function CookieBanner() {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Check if user has already made a choice
     const hasConsent = hasCookieConsent();
     const hasDeclined = hasCookieDeclined();
     
     if (!hasConsent && !hasDeclined) {
-      // Show banner after a small delay for better UX
       setTimeout(() => {
         setIsVisible(true);
         setTimeout(() => setIsAnimating(true), 50);
@@ -43,9 +41,8 @@ export default function CookieBanner() {
       <div className="border-t border-border bg-white/95 px-4 py-4 shadow-soft-xl backdrop-blur-xl sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Content */}
             <div className="flex flex-1 items-start gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-button bg-gradient-primary shadow-soft">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-button bg-primary shadow-purple">
                 <svg
                   className="h-5 w-5 text-white"
                   fill="none"
@@ -61,44 +58,40 @@ export default function CookieBanner() {
                 </svg>
               </div>
               <div className="flex-1 pt-0.5">
-                <h3 className="text-sm font-bold text-text sm:text-base">
-                  Wir schätzen Ihre Privatsphäre
+                <h3 className="font-sans text-sm font-bold text-text sm:text-base">
+                  We value your privacy
                 </h3>
-                <p className="mt-1 text-xs text-text-muted sm:text-sm">
-                  Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern, personalisierte Inhalte bereitzustellen und unseren Traffic zu analysieren. Durch Klicken auf "Alle akzeptieren" stimmen Sie unserer Verwendung von Cookies zu.
+                <p className="mt-1 font-body text-xs text-text-muted sm:text-sm">
+                  We use cookies to enhance your browsing experience, deliver personalized content, and analyze our traffic. By clicking "Accept All" you consent to our use of cookies.
                 </p>
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-shrink-0">
               <button
                 onClick={handleDecline}
                 className="btn-secondary whitespace-nowrap text-xs sm:text-sm"
               >
-                Ablehnen
+                Decline
               </button>
               <button
                 onClick={handleAccept}
                 className="btn-primary whitespace-nowrap text-xs sm:text-sm"
               >
-                Alle akzeptieren
+                Accept All
               </button>
             </div>
           </div>
 
-          {/* Privacy policy link (optional) */}
           <div className="mt-3 sm:ml-[52px]">
             <a
               href="#"
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-opacity duration-150 hover:opacity-80"
+              className="inline-flex items-center gap-1 font-body text-xs font-medium text-primary transition-opacity duration-200 hover:opacity-80"
               onClick={(e) => {
                 e.preventDefault();
-                // You can add a link to your privacy policy here
-                alert('Link zur Datenschutzerklärung würde hier stehen');
               }}
             >
-              Erfahren Sie mehr über unsere Datenschutzerklärung
+              Learn more about our privacy policy
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>

@@ -44,11 +44,11 @@ export default function ImageUploadField({
 
     for (const file of filesToAdd) {
       if (!allowedTypes.includes(file.type)) {
-        alert(`Dateityp ${file.type} wird nicht unterstützt. Erlaubte Typen: JPEG, PNG, WebP, GIF`);
+        alert(`File type ${file.type} is not supported. Allowed types: JPEG, PNG, WebP, GIF`);
         continue;
       }
       if (file.size > maxSize) {
-        alert(`Datei ${file.name} ist zu groß. Maximale Größe: 5MB`);
+        alert(`File ${file.name} is too large. Maximum size: 5MB`);
         continue;
       }
       validFiles.push(file);
@@ -87,14 +87,14 @@ export default function ImageUploadField({
   };
 
   const handleDeleteExisting = async (imageId: string) => {
-    if (!confirm("Möchten Sie dieses Bild wirklich löschen?")) return;
+    if (!confirm("Are you sure you want to delete this image?")) return;
 
     setDeletingIds((prev) => new Set(prev).add(imageId));
     try {
       await onDelete(imageId);
     } catch (error) {
       console.error("Failed to delete image:", error);
-      alert("Fehler beim Löschen des Bildes");
+      alert("Failed to delete image");
     } finally {
       setDeletingIds((prev) => {
         const next = new Set(prev);
@@ -106,11 +106,11 @@ export default function ImageUploadField({
 
   return (
     <div className="space-y-2">
-      <label className="text-xs font-medium text-text">
-        Bilder (max. 3)
+      <label className="font-body text-xs font-medium text-text">
+        Images (max. 3)
       </label>
-      <p className="text-[11px] text-text-muted">
-        Laden Sie bis zu 3 Bilder hoch (JPEG, PNG, WebP, GIF, max. 5MB pro Bild)
+      <p className="font-body text-[11px] text-text-muted">
+        Upload up to 3 images (JPEG, PNG, WebP, GIF, max. 5MB each)
       </p>
 
       {/* Existing Images */}
@@ -120,7 +120,7 @@ export default function ImageUploadField({
             <div key={image.id} className="relative group">
               <img
                 src={image.url}
-                alt={`Bild ${image.position + 1}`}
+                alt={`Image ${image.position + 1}`}
                 className="h-24 w-full rounded-lg object-cover border-2 border-border"
               />
               <button
@@ -145,7 +145,7 @@ export default function ImageUploadField({
               </button>
               {deletingIds.has(image.id) && (
                 <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-lg">
-                  <span className="text-xs text-text-muted">Löschen…</span>
+                  <span className="font-body text-xs text-text-muted">Deleting…</span>
                 </div>
               )}
             </div>
@@ -184,7 +184,7 @@ export default function ImageUploadField({
                 </svg>
               </button>
               <div className="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-[10px] px-1 rounded">
-                Neu
+                New
               </div>
             </div>
           ))}
@@ -207,7 +207,7 @@ export default function ImageUploadField({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled}
-            className="w-full border-2 border-dashed border-border rounded-lg py-8 px-4 text-center text-sm text-text-muted hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border-2 border-dashed border-border rounded-lg py-8 px-4 text-center font-body text-sm text-text-muted hover:border-primary hover:text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               className="w-8 h-8 mx-auto mb-2"
@@ -222,14 +222,14 @@ export default function ImageUploadField({
                 d="M12 4v16m8-8H4"
               />
             </svg>
-            Bilder hochladen ({totalImageCount}/3)
+            Upload Images ({totalImageCount}/3)
           </button>
         </div>
       )}
 
       {totalImageCount >= 3 && (
-        <p className="text-[11px] text-text-muted">
-          Maximale Anzahl von 3 Bildern erreicht
+        <p className="font-body text-[11px] text-text-muted">
+          Maximum of 3 images reached
         </p>
       )}
     </div>
