@@ -84,18 +84,9 @@ export default function CookieBanner() {
           </div>
 
           <div className="mt-3 sm:ml-[52px]">
-            <a
-              href="#"
-              className="inline-flex items-center gap-1 font-body text-xs font-medium text-primary transition-opacity duration-200 hover:opacity-80"
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              Learn more about our privacy policy
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
+            <span className="inline-flex items-center gap-1 font-body text-xs font-medium text-primary/60">
+              Privacy policy available soon
+            </span>
           </div>
         </div>
       </div>
