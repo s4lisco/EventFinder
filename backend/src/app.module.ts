@@ -1,12 +1,14 @@
 // backend/src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { OrganizerModule } from './organizer/organizer.module';
 import { EventModule } from './events/event.module';
 import { AdminModule } from './admin/admin.module';
 import { FlyerModule } from './flyer/flyer.module';
+import { MailModule } from './mail/mail.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -22,14 +24,25 @@ import { RolesGuard } from './auth/roles.guard';
       autoLoadEntities: true,
       synchronize: false,
     }),
+    ThrottlerModule.forRoot([
+      {
+        name: 'default',
+        ttl: Number(process.env.THROTTLE_TTL_MS) || 60_000,
+        limit: Number(process.env.THROTTLE_LIMIT) || 100,
+      },
+    ]),
     AuthModule,
     OrganizerModule,
     EventModule,
     AdminModule,
     FlyerModule,
+    MailModule,
   ],
   providers: [
-    // Optional: make guards global, or apply per-controller
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

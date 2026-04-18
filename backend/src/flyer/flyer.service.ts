@@ -1,5 +1,5 @@
 // backend/src/flyer/flyer.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { ExtractedEventDto } from './dto/extract-event.dto';
 import OpenAI from 'openai';
 
@@ -28,17 +28,15 @@ export class FlyerService {
 
   async extractTextUsingOCR(buffer: Buffer): Promise<string> {
     if (!this.openaiClient) {
-      throw new Error(
-        'Groq client not initialized. Please configure GROQ_API_KEY.',
+      throw new ServiceUnavailableException(
+        'Flyer-Verarbeitung ist nicht verfügbar. Bitte GROQ_API_KEY konfigurieren.',
       );
     }
 
     try {
-      // Convert buffer to base64 for vision API
       const base64Image = buffer.toString('base64');
       const mimeType = this.detectMimeType(buffer);
 
-      // Use Groq's vision capabilities via llama-2-90b-vision or similar
       const response = await this.openaiClient.chat.completions.create({
         model: 'meta-llama/llama-4-scout-17b-16e-instruct',
         messages: [
@@ -63,15 +61,11 @@ export class FlyerService {
       });
 
       const extractedText = response.choices[0]?.message?.content || '';
-      this.logger.log(
-        `Extracted ${extractedText.length} characters using Groq OCR`,
-      );
+      this.logger.log(`OCR: ${extractedText.length} Zeichen extrahiert`);
       return extractedText;
     } catch (error) {
-      this.logger.error('OCR extraction failed:', error);
-      throw new Error(
-        `OCR extraction failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      this.logger.error('OCR-Extraktion fehlgeschlagen', error instanceof Error ? error.stack : String(error));
+      this.throwGroqException(error);
     }
   }
 
@@ -84,10 +78,34 @@ export class FlyerService {
     return 'application/octet-stream';
   }
 
+  /** Übersetzt Groq/OpenAI API-Fehler in sprechende NestJS-Exceptions. */
+  private throwGroqException(error: unknown): never {
+    if (error instanceof OpenAI.APIError) {
+      if (error.status === 401) {
+        throw new ServiceUnavailableException(
+          'Flyer-Verarbeitung ist nicht verfügbar (ungültiger API-Schlüssel).',
+        );
+      }
+      if (error.status === 429) {
+        throw new ServiceUnavailableException(
+          'Flyer-Verarbeitung ist momentan ausgelastet. Bitte kurz warten und erneut versuchen.',
+        );
+      }
+      if (error.status != null && error.status >= 500) {
+        throw new ServiceUnavailableException(
+          'Flyer-Verarbeitung ist vorübergehend nicht verfügbar. Bitte erneut versuchen.',
+        );
+      }
+    }
+    throw new ServiceUnavailableException(
+      'Flyer konnte nicht verarbeitet werden. Bitte erneut versuchen oder Event manuell ausfüllen.',
+    );
+  }
+
   async extractEventDataUsingGroq(text: string): Promise<ExtractedEventDto> {
     if (!this.openaiClient) {
-      throw new Error(
-        'Groq LLM client not initialized. Please configure GROQ_API_KEY.',
+      throw new ServiceUnavailableException(
+        'Flyer-Verarbeitung ist nicht verfügbar. Bitte GROQ_API_KEY konfigurieren.',
       );
     }
 
@@ -137,7 +155,7 @@ Important rules:
       });
 
       const content = response.choices[0]?.message?.content || '';
-      this.logger.log('LLM response received');
+      this.logger.log('LLM-Antwort empfangen');
 
       // Parse the JSON response
       const jsonMatch = content.match(/{[\s\S]*}/);
@@ -150,36 +168,34 @@ Important rules:
         };
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
-      const confidence = parsed.confidence || 50;
+      const parsed = JSON.parse(jsonMatch[0]) as Record<string, unknown>;
+      const confidence = (parsed.confidence as number) || 50;
 
-      // Determine if manual review is needed
       const needsManualReview = !parsed.startDate || confidence < 50;
 
+      const str = (v: unknown): string | undefined =>
+        v && typeof v === 'string' ? v : undefined;
+
       return {
-        title: parsed.title || undefined,
-        description: parsed.description || undefined,
-        startDate: parsed.startDate || undefined,
-        endDate: parsed.endDate || undefined,
-        category: parsed.category || undefined,
-        priceInfo: parsed.priceInfo || undefined,
-        locationName: parsed.locationName || undefined,
-        address: parsed.address || undefined,
-        latitude: parsed.latitude || undefined,
-        longitude: parsed.longitude || undefined,
-        website: parsed.website || undefined,
-        organizerName: parsed.organizerName || undefined,
+        title: str(parsed.title),
+        description: str(parsed.description),
+        startDate: str(parsed.startDate),
+        endDate: str(parsed.endDate),
+        category: str(parsed.category),
+        priceInfo: str(parsed.priceInfo),
+        locationName: str(parsed.locationName),
+        address: str(parsed.address),
+        latitude: str(parsed.latitude),
+        longitude: str(parsed.longitude),
+        website: str(parsed.website),
+        organizerName: str(parsed.organizerName),
         needsManualReview,
         extractedText: text,
         confidence,
       };
     } catch (error) {
-      this.logger.error('LLM extraction failed:', error);
-      return {
-        needsManualReview: true,
-        extractedText: text,
-        confidence: 0,
-      };
+      this.logger.error('LLM-Extraktion fehlgeschlagen', error instanceof Error ? error.stack : String(error));
+      this.throwGroqException(error);
     }
   }
 
