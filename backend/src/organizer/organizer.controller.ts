@@ -1,14 +1,18 @@
 // backend/src/organizer/organizer.controller.ts
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
+  Redirect,
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { OrganizerService } from './organizer.service';
 import { CreateOrganizerDto } from './dto/create-organizer.dto';
 import { LoginOrganizerDto } from './dto/login-organizer.dto';
@@ -28,9 +32,20 @@ export class OrganizerController {
   }
 
   @Public()
+  @Throttle({ default: { limit: Number(process.env.THROTTLE_LOGIN_LIMIT) || 5, ttl: Number(process.env.THROTTLE_TTL_MS) || 60_000 } })
   @Post('login')
   async login(@Body() dto: LoginOrganizerDto) {
     return this.organizerService.login(dto);
+  }
+
+  @Public()
+  @Get('verify')
+  async verifyEmail(@Query('token') token: string) {
+    if (!token) {
+      throw new BadRequestException('Token fehlt.');
+    }
+    await this.organizerService.verifyEmail(token);
+    return { message: 'E-Mail-Adresse erfolgreich bestätigt.' };
   }
 
   @Get(':id/events')
@@ -40,12 +55,9 @@ export class OrganizerController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: any,
   ) {
-    // Optionally enforce that organizers can only access their own events
-    // Admins can access any organizer's events
-    const user = req.user as { sub: string; role: string };
-    if (user.role === 'organizer' && user.sub !== id) {
-      // you could throw ForbiddenException here, but keeping it simple
-      return this.organizerService.getEventsForOrganizer(user.sub);
+    const user = req.user as { userId: string; role: string };
+    if (user.role === 'organizer' && user.userId !== id) {
+      return this.organizerService.getEventsForOrganizer(user.userId);
     }
 
     return this.organizerService.getEventsForOrganizer(id);

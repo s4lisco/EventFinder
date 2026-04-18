@@ -21,7 +21,7 @@ VALUES (
 -- INSERT ORGANIZER (skip if email already exists)
 -- -----------------------------------------------
 INSERT IGNORE INTO `organizers` (
-    `id`, `name`, `email`, `password_hash`, `isActive`, `created_at`, `updated_at`
+    `id`, `name`, `email`, `password_hash`, `isActive`, `email_verified`, `role`, `created_at`, `updated_at`
 )
 VALUES (
     UUID(),
@@ -29,6 +29,8 @@ VALUES (
     'organizer@events.com',
     '$2b$10$NReAWRMRmAtcziZtu75NzOnaN9NvrWDVp.EYJDQN84fjdXuGzV3xS', -- organizer123
     1,
+    1,
+    'organizer',
     NOW(),
     NOW()
 );

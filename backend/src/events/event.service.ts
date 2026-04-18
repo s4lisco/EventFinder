@@ -113,7 +113,7 @@ export class EventService {
     const event = this.eventRepository.create({
       ...dto,
       startDate: new Date(dto.startDate),
-      endDate: new Date(dto.endDate),
+      endDate: dto.endDate ? new Date(dto.endDate) : undefined,
       organizerId,
       status: EventStatus.PENDING,
     });
@@ -128,7 +128,7 @@ export class EventService {
   ): Promise<Event> {
     const event = await this.findOne(id);
 
-    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+    if (user.role === 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to update this event.',
       );
@@ -154,7 +154,7 @@ export class EventService {
       throw new NotFoundException(`Event with id "${id}" not found`);
     }
 
-    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+    if (user.role === 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to delete this event.',
       );
@@ -176,7 +176,7 @@ export class EventService {
   ): Promise<EventImage[]> {
     const event = await this.findOne(eventId);
 
-    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+    if (user.role === 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to upload images for this event.',
       );
@@ -218,7 +218,7 @@ export class EventService {
   ): Promise<void> {
     const event = await this.findOne(eventId);
 
-    if (user.role !== 'organizer' && event.organizerId !== user.userId) {
+    if (user.role === 'organizer' && event.organizerId !== user.userId) {
       throw new ForbiddenException(
         'You are not allowed to delete images for this event.',
       );
