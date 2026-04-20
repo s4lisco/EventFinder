@@ -141,6 +141,22 @@ export class EventService {
     return this.eventRepository.save(event);
   }
 
+  async resubmitEvent(id: string, organizerId: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({ where: { id } });
+    if (!event) throw new NotFoundException(`Event with id "${id}" not found`);
+
+    if (event.organizerId !== organizerId) {
+      throw new ForbiddenException('You are not allowed to resubmit this event.');
+    }
+
+    if (event.status !== EventStatus.REJECTED) {
+      throw new BadRequestException('Only rejected events can be resubmitted.');
+    }
+
+    event.status = EventStatus.PENDING;
+    return this.eventRepository.save(event);
+  }
+
   async removeForOrganizer(
     id: string,
     user: { userId: string; role: string },

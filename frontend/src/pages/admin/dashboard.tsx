@@ -62,13 +62,13 @@ export default function AdminDashboardPage() {
 
   const handleApprove = async (event: Event) => {
     const confirmed = window.confirm(
-      `Approve event "${event.title}"? It will become visible to users.`,
+      `„${event.title}" genehmigen? Die Veranstaltung wird danach öffentlich sichtbar.`,
     );
     if (!confirmed) return;
 
     const ok = await approveEvent(event.id);
     if (ok) {
-      showToast("Event approved.");
+      showToast("Veranstaltung genehmigt.");
       refetch();
     }
   };
@@ -77,12 +77,12 @@ export default function AdminDashboardPage() {
     setRejectingEvent(event);
   };
 
-  const handleRejectConfirm = async (comment?: string) => {
+  const handleRejectConfirm = async (reason: string) => {
     if (!rejectingEvent) return;
 
-    const ok = await rejectEvent(rejectingEvent.id, comment);
+    const ok = await rejectEvent(rejectingEvent.id, reason);
     if (ok) {
-      showToast("Event rejected.");
+      showToast("Veranstaltung abgelehnt.");
       setRejectingEvent(null);
       refetch();
     }
@@ -221,7 +221,6 @@ export default function AdminDashboardPage() {
         {/* Reject modal */}
         {rejectingEvent && (
           <ApprovalModal
-            mode="reject"
             open={!!rejectingEvent}
             eventTitle={rejectingEvent.title}
             onCancel={handleRejectCancel}

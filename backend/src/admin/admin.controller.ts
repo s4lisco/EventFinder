@@ -1,5 +1,6 @@
 // backend/src/admin/admin.controller.ts
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -54,7 +55,7 @@ export class AdminController {
   @Roles('admin')
   @Put('events/:id/approve')
   async approveEvent(@Param('id') id: string): Promise<Event> {
-    return this.adminService.updateEventStatus(id, { status: EventStatus.APPROVED });
+    return this.adminService.approveEvent(id);
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -62,12 +63,12 @@ export class AdminController {
   @Put('events/:id/reject')
   async rejectEvent(
     @Param('id') id: string,
-    @Body('adminComment') adminComment?: string,
+    @Body('reason') reason: string,
   ): Promise<Event> {
-    return this.adminService.updateEventStatus(id, {
-      status: EventStatus.REJECTED,
-      adminComment,
-    });
+    if (!reason || reason.trim().length < 10) {
+      throw new BadRequestException('Begründung muss mindestens 10 Zeichen enthalten.');
+    }
+    return this.adminService.rejectEvent(id, reason.trim());
   }
 
   // ── Organizers ────────────────────────────────────────────────────────────

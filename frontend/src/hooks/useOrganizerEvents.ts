@@ -64,6 +64,9 @@ export function useOrganizerEvents(
           website: e.website ?? null,
           images: e.images ?? [],
           status: e.status ?? "pending",
+          rejectionReason: e.rejectionReason ?? null,
+          rejectedAt: e.rejectedAt ?? null,
+          approvedAt: e.approvedAt ?? null,
         }));
 
         setEvents(mapped);

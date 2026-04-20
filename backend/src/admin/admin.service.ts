@@ -76,18 +76,26 @@ export class AdminService {
     return this.eventRepository.save(event);
   }
 
-  async approveEvent(eventId: string, dto?: UpdateEventStatusDto): Promise<Event> {
-    return this.updateEventStatus(eventId, {
-      status: EventStatus.APPROVED,
-      adminComment: dto?.adminComment,
-    });
+  async approveEvent(eventId: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({ where: { id: eventId } });
+    if (!event) throw new NotFoundException('Event not found');
+
+    event.status = EventStatus.APPROVED;
+    event.approvedAt = new Date();
+    event.rejectionReason = null;
+    event.rejectedAt = null;
+    return this.eventRepository.save(event);
   }
 
-  async rejectEvent(eventId: string, dto?: UpdateEventStatusDto): Promise<Event> {
-    return this.updateEventStatus(eventId, {
-      status: EventStatus.REJECTED,
-      adminComment: dto?.adminComment,
-    });
+  async rejectEvent(eventId: string, reason: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({ where: { id: eventId } });
+    if (!event) throw new NotFoundException('Event not found');
+
+    event.status = EventStatus.REJECTED;
+    event.rejectionReason = reason;
+    event.rejectedAt = new Date();
+    event.approvedAt = null;
+    return this.eventRepository.save(event);
   }
 
   // ── Organizers ───────────────────────────────────────────────────────────────

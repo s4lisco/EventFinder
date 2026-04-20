@@ -5,7 +5,7 @@ type ActionType = "approve" | "reject" | null;
 
 interface UseEventApprovalResult {
   approveEvent: (id: string) => Promise<boolean>;
-  rejectEvent: (id: string, adminComment?: string) => Promise<boolean>;
+  rejectEvent: (id: string, reason: string) => Promise<boolean>;
   loadingId: string | null;
   loadingAction: ActionType;
   error: string | null;
@@ -56,7 +56,7 @@ export function useEventApproval(token?: string): UseEventApprovalResult {
 
   const rejectEvent = async (
     id: string,
-    adminComment?: string,
+    reason: string,
   ): Promise<boolean> => {
     if (!token) {
       setError("Not authenticated");
@@ -74,9 +74,7 @@ export function useEventApproval(token?: string): UseEventApprovalResult {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(
-          adminComment ? { admin_comment: adminComment } : {},
-        ),
+        body: JSON.stringify({ reason }),
       });
 
       if (!res.ok) {

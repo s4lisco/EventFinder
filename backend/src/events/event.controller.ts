@@ -125,6 +125,17 @@ export class EventController {
     return this.eventService.uploadImages(id, user, files);
   }
 
+  @Put(':id/resubmit')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('organizer')
+  async resubmit(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: any,
+  ): Promise<Event> {
+    const user = req.user as { userId: string; role: string };
+    return this.eventService.resubmitEvent(id, user.userId) as any;
+  }
+
   @Delete(':id/images/:imageId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('organizer', 'admin')
