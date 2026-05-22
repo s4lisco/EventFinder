@@ -16,6 +16,7 @@ export enum EventStatus {
   PENDING = 'pending',
   APPROVED = 'approved',
   REJECTED = 'rejected',
+  ARCHIVED = 'archived',
 }
 
 @Entity({ name: 'events' })
@@ -77,6 +78,15 @@ export class Event {
   // 👇 EXPLICIT TEXT TYPE (already OK, just ensuring consistency)
   @Column({ type: 'text', nullable: true })
   adminComment!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  rejectionReason!: string | null;
+
+  @Column({ type: 'datetime', nullable: true })
+  rejectedAt!: Date | null;
+
+  @Column({ type: 'datetime', nullable: true })
+  approvedAt!: Date | null;
 
   @Column({ type: 'varchar', length: 36, nullable: true })
   organizerId!: string | null;

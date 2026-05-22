@@ -24,6 +24,9 @@ export interface Event {
   website?: string | null;
   images?: string[] | null;
   eventImages?: EventImage[];
-  status?: "pending" | "approved" | "rejected";
+  status?: "pending" | "approved" | "rejected" | "archived";
+  rejectionReason?: string | null;
+  rejectedAt?: string | null;
+  approvedAt?: string | null;
   distanceKm?: number;
 }

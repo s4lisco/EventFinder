@@ -25,8 +25,17 @@ export class Organizer {
   @Column({ name: 'password_hash', length: 255 })
   passwordHash!: string;
 
+  @Column({ length: 50, default: 'organizer' })
+  role!: string;
+
   @Column({ name: 'isActive', type: 'boolean', default: true })
   isActive!: boolean;
+
+  @Column({ name: 'email_verified', type: 'boolean', default: false })
+  emailVerified!: boolean;
+
+  @Column({ name: 'email_verification_token', type: 'varchar', length: 255, nullable: true })
+  emailVerificationToken!: string | null;
 
   @OneToMany(() => Event, (event) => event.organizer)
   events!: Event[];

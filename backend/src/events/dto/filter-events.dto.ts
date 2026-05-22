@@ -2,6 +2,7 @@
 import { Type } from 'class-transformer';
 import {
   IsEnum,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -9,10 +10,14 @@ import {
   Min,
 } from 'class-validator';
 import { EventStatus } from '../event.entity';
+import { EVENT_CATEGORIES } from '../event-category.constants';
 
 export class FilterEventsDto {
   @IsOptional()
   @IsString()
+  @IsIn(EVENT_CATEGORIES, {
+    message: `category must be one of: ${EVENT_CATEGORIES.join(', ')}`,
+  })
   category?: string;
 
   @IsOptional()

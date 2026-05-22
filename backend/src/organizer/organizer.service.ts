@@ -1,5 +1,6 @@
 // backend/src/organizer/organizer.service.ts
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -13,6 +14,8 @@ import { LoginOrganizerDto } from './dto/login-organizer.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Event } from '../events/event.entity';
+import { MailService } from '../mail/mail.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class OrganizerService {
@@ -22,10 +25,11 @@ export class OrganizerService {
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   private sanitizeOrganizer(organizer: Organizer) {
-    const { passwordHash, ...rest } = organizer;
+    const { passwordHash, emailVerificationToken, ...rest } = organizer;
     return rest;
   }
 
@@ -39,15 +43,39 @@ export class OrganizerService {
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
+    const emailVerificationToken = randomUUID();
 
     const organizer = this.organizerRepository.create({
       name: dto.name,
       email: dto.email.toLowerCase(),
       passwordHash,
+      emailVerified: false,
+      emailVerificationToken,
     });
 
     const saved = await this.organizerRepository.save(organizer);
+
+    await this.mailService.sendVerificationEmail(
+      saved.email,
+      saved.name,
+      emailVerificationToken,
+    );
+
     return this.sanitizeOrganizer(saved);
+  }
+
+  async verifyEmail(token: string): Promise<void> {
+    const organizer = await this.organizerRepository.findOne({
+      where: { emailVerificationToken: token },
+    });
+
+    if (!organizer) {
+      throw new BadRequestException('Ungültiger oder abgelaufener Verifizierungslink.');
+    }
+
+    organizer.emailVerified = true;
+    organizer.emailVerificationToken = null;
+    await this.organizerRepository.save(organizer);
   }
 
   async validateOrganizer(
@@ -65,6 +93,10 @@ export class OrganizerService {
     const isMatch = await bcrypt.compare(password, organizer.passwordHash);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!organizer.emailVerified) {
+      throw new UnauthorizedException('EMAIL_NOT_VERIFIED');
     }
 
     return organizer;

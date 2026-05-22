@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { StorageService } from './storage.interface';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -16,11 +16,11 @@ interface MulterFile {
 
 @Injectable()
 export class LocalDiskStorage implements StorageService {
+  private readonly logger = new Logger(LocalDiskStorage.name);
   private readonly uploadDir = path.join(process.cwd(), 'uploads', 'event-images');
   private readonly baseUrl = process.env.UPLOAD_BASE_URL || 'http://localhost:4000';
 
   constructor() {
-    // Ensure upload directory exists
     this.ensureUploadDir();
   }
 
@@ -28,7 +28,7 @@ export class LocalDiskStorage implements StorageService {
     try {
       await fs.mkdir(this.uploadDir, { recursive: true });
     } catch (error) {
-      console.error('Failed to create upload directory:', error);
+      this.logger.error('Upload-Verzeichnis konnte nicht erstellt werden', error instanceof Error ? error.stack : String(error));
     }
   }
 
@@ -56,7 +56,7 @@ export class LocalDiskStorage implements StorageService {
     } catch (error: any) {
       // Ignore ENOENT errors (file doesn't exist)
       if (error.code !== 'ENOENT') {
-        console.error(`Failed to delete file ${key}:`, error);
+        this.logger.error(`Datei konnte nicht gelöscht werden: ${key}`, error instanceof Error ? error.stack : String(error));
       }
     }
   }

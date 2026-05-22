@@ -42,18 +42,42 @@ export default function OrganizerDashboardPage() {
   } = useDeleteEvent(token || undefined);
 
   const [toast, setToast] = useState<string | null>(null);
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleDelete = async (event: Event) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${event.title}"? This cannot be undone.`,
+      `„${event.title}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
     );
     if (!confirmed) return;
 
     const ok = await deleteEvent(event.id);
     if (ok) {
-      setToast("Event deleted successfully.");
+      showToast("Event gelöscht.");
       refetch();
-      setTimeout(() => setToast(null), 3000);
+    }
+  };
+
+  const handleResubmit = async (event: Event) => {
+    const confirmed = window.confirm(
+      `„${event.title}" erneut zur Prüfung einreichen?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`${baseUrl}/events/${event.id}/resubmit`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      showToast("Event wurde erneut eingereicht und wird geprüft.");
+      refetch();
+    } catch {
+      showToast("Fehler beim Einreichen. Bitte versuche es erneut.");
     }
   };
 
@@ -202,6 +226,7 @@ export default function OrganizerDashboardPage() {
                       router.push(`/organizers/events/${event.id}/edit`)
                     }
                     onDelete={() => handleDelete(event)}
+                    onResubmit={() => handleResubmit(event)}
                   />
                 </div>
               ))}

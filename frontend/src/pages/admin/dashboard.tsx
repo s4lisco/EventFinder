@@ -62,13 +62,13 @@ export default function AdminDashboardPage() {
 
   const handleApprove = async (event: Event) => {
     const confirmed = window.confirm(
-      `Approve event "${event.title}"? It will become visible to users.`,
+      `„${event.title}" genehmigen? Die Veranstaltung wird danach öffentlich sichtbar.`,
     );
     if (!confirmed) return;
 
     const ok = await approveEvent(event.id);
     if (ok) {
-      showToast("Event approved.");
+      showToast("Veranstaltung genehmigt.");
       refetch();
     }
   };
@@ -77,12 +77,12 @@ export default function AdminDashboardPage() {
     setRejectingEvent(event);
   };
 
-  const handleRejectConfirm = async (comment?: string) => {
+  const handleRejectConfirm = async (reason: string) => {
     if (!rejectingEvent) return;
 
-    const ok = await rejectEvent(rejectingEvent.id, comment);
+    const ok = await rejectEvent(rejectingEvent.id, reason);
     if (ok) {
-      showToast("Event rejected.");
+      showToast("Veranstaltung abgelehnt.");
       setRejectingEvent(null);
       refetch();
     }
@@ -111,20 +111,22 @@ export default function AdminDashboardPage() {
       </Head>
       <div className="flex min-h-screen flex-col bg-gradient-subtle">
         <header className="border-b border-slate-200/50 bg-white/80 px-4 py-4 shadow-soft backdrop-blur-xl lg:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 shadow-soft">
-              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 shadow-soft">
+                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gradient">Pending Events</h1>
+                <p className="text-sm text-slate-600">Review and moderate event submissions</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gradient">
-                Pending Events
-              </h1>
-              <p className="text-sm text-slate-600">
-                Review and moderate event submissions
-              </p>
-            </div>
+            <nav className="flex gap-2">
+              <a href="/admin/dashboard" className="btn-primary text-sm">Events</a>
+              <a href="/admin/organizers" className="btn-ghost text-sm">Benutzer</a>
+            </nav>
           </div>
         </header>
 
@@ -219,7 +221,6 @@ export default function AdminDashboardPage() {
         {/* Reject modal */}
         {rejectingEvent && (
           <ApprovalModal
-            mode="reject"
             open={!!rejectingEvent}
             eventTitle={rejectingEvent.title}
             onCancel={handleRejectCancel}
